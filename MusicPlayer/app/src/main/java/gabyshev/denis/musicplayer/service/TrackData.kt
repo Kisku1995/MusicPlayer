@@ -1,4 +1,4 @@
-package gabyshev.denis.musicplayer.fragments.tracks
+package gabyshev.denis.musicplayer.service
 
 /**
  * Created by Borya on 15.07.2017.

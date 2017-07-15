@@ -1,13 +1,12 @@
 package gabyshev.denis.musicplayer.fragments.tracks
 
 import android.content.Context
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.AppCompatDrawableManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
-import org.jetbrains.anko.backgroundColor
+import gabyshev.denis.musicplayer.service.TrackData
 import org.jetbrains.anko.find
 
 /**
@@ -26,7 +25,7 @@ class TracksHolder(view: View) : RecyclerView.ViewHolder(view) {
         setBackground(context, position)
     }
 
-    fun setBackground(context: Context, position: Int) {
+    private fun setBackground(context: Context, position: Int) {
         if(position % 2 == 0) mView.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_even)
          else mView.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_odd)
     }

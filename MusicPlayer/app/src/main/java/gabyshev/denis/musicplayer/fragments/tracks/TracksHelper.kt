@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import gabyshev.denis.musicplayer.service.TrackData
 import java.util.ArrayList
 
 /**
@@ -61,7 +62,7 @@ class TracksHelper {
         return arrayTrackData
     }
 
-    fun convertDuration(duration: Long): String {
+    private fun convertDuration(duration: Long): String {
         var out: String = "00:00"
         var hours: Long = 0
 
