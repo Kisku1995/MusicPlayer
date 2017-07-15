@@ -4,14 +4,20 @@ import android.app.ActivityManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.IBinder
+import android.util.Log
+import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
+import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
 
 /**
  * Created by Borya on 15.07.2017.
  */
 
 class MediaPlayerService: Service() {
+    private val TAG = "MediaPlayerService"
+
+    private var musicMediaPlayer: MusicMediaPlayer = MusicMediaPlayer()
+
     companion object {
         fun isRunning(context: Context, serviceClass: Class<*>): Boolean {
             val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
@@ -29,9 +35,14 @@ class MediaPlayerService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        MusicMediaPlayer.instance()
         return super.onStartCommand(intent, flags, startId)
     }
+
+
+
+
+
+
 
 
 

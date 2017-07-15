@@ -5,11 +5,10 @@ import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.service.MediaPlayerService
-import gabyshev.denis.musicplayer.service.MusicMediaPlayer
+import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
 import gabyshev.denis.musicplayer.service.TrackData
 
 /**
@@ -20,7 +19,7 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
     private val TAG = "TracksAdapter"
 
     init {
-        MusicMediaPlayer.instance()!!.setPlaylist(arrayTracks)
+//        MusicMediaPlayer.instance()!!.setPlaylist(arrayTracks)
     }
 
     override fun getItemCount(): Int = arrayTracks.size
@@ -35,11 +34,13 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
             if(!MediaPlayerService.isRunning(context, MediaPlayerService::class.java)) {
                 Log.d(TAG, "service not running")
                 context.startService(Intent(context, MediaPlayerService::class.java))
-                MusicMediaPlayer.instance()!!.setActiveAudioAndPlay(position)
             } else {
                 Log.d(TAG, "service running")
-                MusicMediaPlayer.instance()!!.setActiveAudioAndPlay(position)
             }
+
+            RxMediaPlayerBus.instance()?.setPlaylist(arrayTracks)
+            RxMediaPlayerBus.instance()?.setActiveAudioAndPlay(position)
+
         }
     }
 
