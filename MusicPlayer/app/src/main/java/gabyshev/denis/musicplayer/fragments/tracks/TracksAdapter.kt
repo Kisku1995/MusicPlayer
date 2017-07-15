@@ -14,9 +14,12 @@ import gabyshev.denis.musicplayer.service.TrackData
  */
 
 class TracksAdapter(context: Context, arrayTracks: ArrayList<TrackData>): RecyclerView.Adapter<TracksHolder>() {
-
     private val mArrayTracks: ArrayList<TrackData> = arrayTracks
     private val mContext: Context = context
+
+    init {
+        MusicMediaPlayer.instance()!!.setPlaylist(mArrayTracks)
+    }
 
     override fun getItemCount(): Int = mArrayTracks.size
 
@@ -27,7 +30,7 @@ class TracksAdapter(context: Context, arrayTracks: ArrayList<TrackData>): Recycl
     override fun onBindViewHolder(holder: TracksHolder?, position: Int) {
         holder?.bindTracksHolder(mContext, mArrayTracks[position], position)
         holder?.itemView?.setOnClickListener {
-            MusicMediaPlayer.instance()!!.playTrack(mArrayTracks[position])
+            MusicMediaPlayer.instance()!!.setActiveAudioAndPlay(position)
         }
     }
 
