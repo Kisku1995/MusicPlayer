@@ -21,7 +21,7 @@ class TracksAdapter(context: Context, arrayTracks: ArrayList<TrackData>): Recycl
     }
 
     override fun onBindViewHolder(holder: TracksHolder?, position: Int) {
-        holder?.bindTracksHolder(mArrayTracks.get(position))
+        holder?.bindTracksHolder(mContext, mArrayTracks.get(position), position)
     }
 
 }

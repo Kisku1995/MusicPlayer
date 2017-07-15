@@ -11,6 +11,8 @@ import java.util.ArrayList
  * Created by Borya on 15.07.2017.
  */
 class TracksHelper {
+    private val TAG = "TracksHelper"
+
     companion object {
         private var instance: TracksHelper? = null
 
@@ -44,7 +46,7 @@ class TracksHelper {
             val title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
             val artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
             val data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
-            val duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)).toLong()
+            val duration = convertDuration(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)).toLong())
             val albumId = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)).toInt()
 
             cursor.moveToNext()
@@ -57,6 +59,42 @@ class TracksHelper {
         cursor.close()
 
         return arrayTrackData
+    }
+
+    fun convertDuration(duration: Long): String {
+        var out: String = "00:00"
+        var hours: Long = 0
+
+        try {
+            hours = (duration / 3600000)
+        } catch (e: Exception) {
+            Log.e(TAG, e.message)
+            return out
+        }
+
+        val remaining_minutes = (duration - hours * 3600000) / 60000
+        var minutes = remaining_minutes.toString()
+        if (minutes.contains("0")) {
+            minutes = "00"
+        }
+        val remaining_seconds = duration - hours * 3600000 - remaining_minutes * 60000
+        var seconds = remaining_seconds.toString()
+        if (seconds.length < 2) {
+            seconds = "00"
+        } else {
+            seconds = seconds.substring(0, 2)
+        }
+
+        if (hours > 0) {
+            out = hours.toString() + ":" + minutes + ":" + seconds
+        } else {
+            out = minutes + ":" + seconds
+        }
+
+        return out
+
+
+
     }
 
 }

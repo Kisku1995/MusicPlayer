@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#25252f</color>
     <color name="colorAccent">#000000</color>
     <color name="fragment_tracks_text">#ffffff</color>
+
+    <color name="track_even">#1e1e26</color>
+    <color name="track_odd">#25252f</color>
 </resources>
