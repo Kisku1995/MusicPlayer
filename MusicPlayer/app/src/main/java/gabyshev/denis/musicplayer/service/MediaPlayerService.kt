@@ -5,10 +5,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import android.util.Log
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
-import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
-
 /**
  * Created by Borya on 15.07.2017.
  */
@@ -16,7 +13,7 @@ import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
 class MediaPlayerService: Service() {
     private val TAG = "MediaPlayerService"
 
-    private var musicMediaPlayer: MusicMediaPlayer = MusicMediaPlayer()
+    private var musicMediaPlayer: MusicMediaPlayer = MusicMediaPlayer(this)
 
     companion object {
         fun isRunning(context: Context, serviceClass: Class<*>): Boolean {

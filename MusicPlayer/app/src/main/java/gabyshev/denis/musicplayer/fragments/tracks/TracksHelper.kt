@@ -2,11 +2,13 @@ package gabyshev.denis.musicplayer.fragments.tracks
 
 import android.content.Context
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import gabyshev.denis.musicplayer.service.TrackData
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by Borya on 15.07.2017.
@@ -96,6 +98,35 @@ class TracksHelper {
 
 
 
+    }
+
+    fun getAlbumImagePath(context: Context, albumId: Int): String? {
+        val uri = android.provider.MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
+        val projection = arrayOf(MediaStore.Audio.Albums.ALBUM_ART)
+        val selection = MediaStore.Audio.Albums._ID + "=?"
+        val args = arrayOf<String>(albumId.toString())
+
+        val cursor = context.contentResolver.query(uri, projection, selection, args, null)
+
+        var pathOfAlbum: String? = null
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                pathOfAlbum = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART))
+                Log.i(TAG, "PATH : " + pathOfAlbum)
+            }
+        }
+
+        cursor.close()
+
+        return pathOfAlbum
+    }
+
+    fun getNoAlbumBitmap(): Bitmap {
+        val colorBitmap = Bitmap.createBitmap(192, 192, Bitmap.Config.ARGB_8888)
+        val colors = arrayOf("#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722")
+        colorBitmap.eraseColor(Color.parseColor(colors[Random().nextInt(colors.size)]))
+        return colorBitmap
     }
 
 }
