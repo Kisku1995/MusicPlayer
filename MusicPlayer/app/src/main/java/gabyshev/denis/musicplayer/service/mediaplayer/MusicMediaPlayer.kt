@@ -1,6 +1,5 @@
 package gabyshev.denis.musicplayer.service.mediaplayer
 
-import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
@@ -12,14 +11,14 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.support.v4.app.NotificationCompat
 import android.util.Log
-import android.widget.Button
 import android.widget.RemoteViews
 import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.fragments.tracks.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.TrackData
-import gabyshev.denis.musicplayer.service.notification.PlaybackStatus
+import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by Borya on 15.07.2017.
@@ -28,7 +27,7 @@ import gabyshev.denis.musicplayer.service.notification.PlaybackStatus
 class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
     // don't forget to release mediaplayer
     //private var audioManager: AudioManager = null
-    private var mediaPlayer: MediaPlayer = MediaPlayer()
+    var mediaPlayer: MediaPlayer = MediaPlayer()
     private var playlist: ArrayList<TrackData>? = null
     private var activeAudio: Int = 0
 
@@ -50,7 +49,7 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         mediaPlayer.stop()
         mediaPlayer.reset()
         mediaPlayer.setDataSource(playlist?.get(activeAudio)?.data)
-        buildNotification(service.applicationContext, PlaybackStatus.PLAYING, playlist!![activeAudio])
+        buildNotification(service.applicationContext, playlist!![activeAudio])
         mediaPlayer.prepare()
         mediaPlayer.start()
     }
@@ -69,11 +68,7 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
     }
 
     override fun onCompletion(p0: MediaPlayer?) {
-        activeAudio++
-
-        if(activeAudio == playlist?.size) activeAudio = 0
-
-        playTrack()
+        nextTrack()
     }
 
     override fun onAudioFocusChange(focusState: Int) {
@@ -92,7 +87,7 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         })
     }
 
-    fun buildNotification(context: Context, playbackStatus: PlaybackStatus, track: TrackData){
+    fun buildNotification(context: Context, track: TrackData){
         val views: RemoteViews = RemoteViews(context.packageName, R.layout.media_player_notification)
 
         views.setTextViewText(R.id.title, track.title)
@@ -125,12 +120,18 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
     fun playbackAction(context: Context, action: Int): PendingIntent? {
         val playbackAction = Intent(context, MediaPlayerService::class.java)
         playbackAction.action = action.toString()
-        when(action) {
-            0 -> Log.d(TAG, "previous")
-            1 -> Log.d(TAG, "play")
-            2 -> Log.d(TAG, "next")
-            3 -> Log.d(TAG, "close")
-        }
         return PendingIntent.getService(context, action, playbackAction, 0)
+    }
+
+    fun nextTrack() {
+        activeAudio++
+        if(activeAudio == playlist?.size) activeAudio = 0
+        playTrack()
+    }
+
+    fun previousTrack() {
+        activeAudio--
+        if(activeAudio < 0) activeAudio = playlist!!.size - 1
+        playTrack()
     }
 }

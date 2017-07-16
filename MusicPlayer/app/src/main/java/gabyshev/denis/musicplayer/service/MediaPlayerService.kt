@@ -7,6 +7,8 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
+import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
+
 /**
  * Created by Borya on 15.07.2017.
  */
@@ -41,16 +43,27 @@ class MediaPlayerService: Service() {
         if(intent != null) {
             val action = intent.action;
             Log.d(TAG, "action : ${action}")
+
+            when(action) {
+                "0" -> {
+                    musicMediaPlayer.previousTrack()
+                }
+                "2" -> {
+                    musicMediaPlayer.nextTrack()
+                    Log.d(TAG, "action 2")
+                }
+                "3" -> {
+                    stopSelf()
+                }
+            }
         }
     }
 
-
-
-
-
-
-
-
-
-
+    override fun onDestroy() {
+        RxMediaPlayerBus.instance.
+        musicMediaPlayer.mediaPlayer.release()
+        stopForeground(true)
+        super.onDestroy()
+    }
 }
+

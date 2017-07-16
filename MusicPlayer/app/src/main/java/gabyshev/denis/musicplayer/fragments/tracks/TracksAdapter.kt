@@ -10,6 +10,8 @@ import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
 import gabyshev.denis.musicplayer.service.TrackData
+import io.reactivex.Observable
+import java.util.*
 
 /**
  * Created by Borya on 15.07.2017.
@@ -36,10 +38,15 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
                 context.startService(Intent(context, MediaPlayerService::class.java))
             } else {
                 Log.d(TAG, "service running")
+                RxMediaPlayerBus.instance()?.setPlaylist(arrayTracks)
+                RxMediaPlayerBus.instance()?.setActiveAudioAndPlay(position)
             }
 
-            RxMediaPlayerBus.instance()?.setPlaylist(arrayTracks)
-            RxMediaPlayerBus.instance()?.setActiveAudioAndPlay(position)
+
+
+
+
+
 
         }
     }
