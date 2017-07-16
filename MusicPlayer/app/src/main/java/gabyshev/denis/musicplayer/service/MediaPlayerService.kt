@@ -5,6 +5,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
 /**
  * Created by Borya on 15.07.2017.
@@ -32,7 +33,15 @@ class MediaPlayerService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        handleIncomingActions(intent)
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun handleIncomingActions(intent: Intent?) {
+        if(intent != null) {
+            val action = intent.action;
+            Log.d(TAG, "action : ${action}")
+        }
     }
 
 

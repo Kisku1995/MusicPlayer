@@ -12,10 +12,12 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.support.v4.app.NotificationCompat
 import android.util.Log
+import android.widget.Button
 import android.widget.RemoteViews
 import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.fragments.tracks.TracksHelper
+import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.TrackData
 import gabyshev.denis.musicplayer.service.notification.PlaybackStatus
 
@@ -103,7 +105,13 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
             views.setImageViewBitmap(R.id.image, TracksHelper.instance().getNoAlbumBitmap())
         }
 
+        views.setOnClickPendingIntent(R.id.previous, playbackAction(context, 0))
+        views.setOnClickPendingIntent(R.id.playPause, playbackAction(context, 1))
+        views.setOnClickPendingIntent(R.id.next, playbackAction(context, 2))
+        views.setOnClickPendingIntent(R.id.close, playbackAction(context, 3))
+
         val intent = Intent(context, MainActivity::class.java)
+
         val pIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
         val notificationBuilder = NotificationCompat.Builder(context)
@@ -112,5 +120,17 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
                 .setContentIntent(pIntent)
 
         service.startForeground(1338, notificationBuilder.build())
+    }
+
+    fun playbackAction(context: Context, action: Int): PendingIntent? {
+        val playbackAction = Intent(context, MediaPlayerService::class.java)
+        playbackAction.action = action.toString()
+        when(action) {
+            0 -> Log.d(TAG, "previous")
+            1 -> Log.d(TAG, "play")
+            2 -> Log.d(TAG, "next")
+            3 -> Log.d(TAG, "close")
+        }
+        return PendingIntent.getService(context, action, playbackAction, 0)
     }
 }
