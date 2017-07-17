@@ -1,12 +1,12 @@
-package gabyshev.denis.musicplayer.fragments.tracks
+package gabyshev.denis.musicplayer.utils
 
 import android.content.Context
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.Color
+import android.graphics.*
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import gabyshev.denis.musicplayer.fragments.albums.Album
 import gabyshev.denis.musicplayer.service.TrackData
 import java.util.*
 
@@ -41,27 +41,62 @@ class TracksHelper {
         val selection = "${MediaStore.Audio.Media.IS_MUSIC}  != 0"
         val sortOrder = "${MediaStore.Audio.AudioColumns.TITLE} COLLATE LOCALIZED ASC"
 
-        val cursor: Cursor = context.contentResolver.query(uri, projection, selection, null, sortOrder)
+        val cursor: Cursor? = context.contentResolver.query(uri, projection, selection, null, sortOrder)
 
-        cursor.moveToFirst()
-        while(!cursor.isAfterLast) {
-            val id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)).toLong()
-            val title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
-            val artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
-            val data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
-            val duration = convertDuration(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)).toLong())
-            val albumId = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)).toInt()
+        if (cursor != null) {
+            cursor.moveToFirst()
+            while (!cursor.isAfterLast) {
+                val id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)).toLong()
+                val title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
+                val artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
+                val data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
+                val duration = convertDuration(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)).toLong())
+                val albumId = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)).toInt()
 
-            cursor.moveToNext()
+                cursor.moveToNext()
 
-            if(data != null && (data.endsWith(".mp3") || data.endsWith(".MP3"))) {
-                arrayTrackData.add(TrackData(id, title, artist, data, duration, albumId))
+                if (data != null && (data.endsWith(".mp3") || data.endsWith(".MP3"))) {
+                    arrayTrackData.add(TrackData(id, title, artist, data, duration, albumId))
+                }
             }
+
+            cursor.close()
         }
 
-        cursor.close()
-
         return arrayTrackData
+    }
+
+    fun scanForAlbums(context: Context): ArrayList<Album> {
+        var arrayAlbums: ArrayList<Album> = ArrayList<Album>()
+
+        val uri: Uri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI
+        val projection = arrayOf(
+                MediaStore.Audio.Albums._ID,
+                MediaStore.Audio.Albums.ALBUM,
+                MediaStore.Audio.Albums.ARTIST,
+                MediaStore.Audio.Albums.ALBUM_ART)
+
+        val sortOrder = "${MediaStore.Audio.Media.ALBUM} ASC"
+
+        val cursor: Cursor? = context.contentResolver.query(uri, projection, null, null, sortOrder)
+
+        if(cursor != null) {
+            cursor.moveToFirst()
+            while(!cursor.isAfterLast) {
+                val id: Int = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums._ID)).toInt()
+                val album: String = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM))
+                val artist: String = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST))
+                val cover: String = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART))
+
+                cursor.moveToNext()
+
+                arrayAlbums.add(Album(id, album, artist, cover))
+            }
+
+            cursor.close()
+        }
+
+        return arrayAlbums
     }
 
     private fun convertDuration(duration: Long): String {
@@ -127,6 +162,24 @@ class TracksHelper {
         val colors = arrayOf("#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3F51B5", "#2196F3", "#03A9F4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", "#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722")
         colorBitmap.eraseColor(Color.parseColor(colors[Random().nextInt(colors.size)]))
         return colorBitmap
+    }
+
+    fun getRoundedShape(bitmap: Bitmap): Bitmap {
+        val output = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(output)
+
+        val color = 0xff424242.toInt()
+        val paint = Paint()
+        val rect = Rect(0, 0, bitmap.width, bitmap.height)
+
+        paint.isAntiAlias = true
+        canvas.drawARGB(0, 0, 0, 0)
+        paint.color = color
+        canvas.drawCircle((bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat(),
+                (bitmap.width / 2).toFloat(), paint)
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        canvas.drawBitmap(bitmap, rect, rect, paint)
+        return output
     }
 
 }

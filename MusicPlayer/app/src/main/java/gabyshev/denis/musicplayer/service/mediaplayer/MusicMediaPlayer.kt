@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.support.v4.app.NotificationCompat
 import android.util.Log
@@ -16,7 +15,7 @@ import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
 import gabyshev.denis.musicplayer.service.activityplayer.ServiceActivity
-import gabyshev.denis.musicplayer.fragments.tracks.TracksHelper
+import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.TrackData
 

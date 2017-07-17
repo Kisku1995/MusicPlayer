@@ -12,7 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
-import gabyshev.denis.musicplayer.fragments.tracks.TracksHelper
+import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.activityplayer.ServiceActivity
 import org.jetbrains.anko.find
@@ -43,7 +43,7 @@ class PlayerFragment: Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        image.setImageBitmap(getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
+        image.setImageBitmap(TracksHelper.instance().getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
         RxListener()
 
         if(RxServiceActivity.instance()?.track != null) {
@@ -60,24 +60,6 @@ class PlayerFragment: Fragment() {
         artist = view.find(R.id.artist)
         playPause = view.find(R.id.playPause)
         return view
-    }
-
-    fun getRoundedShape(bitmap: Bitmap): Bitmap {
-        val output = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(output)
-
-        val color = 0xff424242.toInt()
-        val paint = Paint()
-        val rect = Rect(0, 0, bitmap.width, bitmap.height)
-
-        paint.isAntiAlias = true
-        canvas.drawARGB(0, 0, 0, 0)
-        paint.color = color
-        canvas.drawCircle((bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat(),
-                (bitmap.width / 2).toFloat(), paint)
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-        canvas.drawBitmap(bitmap, rect, rect, paint)
-        return output
     }
 
     fun RxListener() {
@@ -100,8 +82,8 @@ class PlayerFragment: Fragment() {
             artist.text = it.track?.artist
 
             val bitmap: Bitmap? = BitmapFactory.decodeFile(TracksHelper.instance().getAlbumImagePath(context, it.track!!.albumId))
-            if (bitmap != null) image.setImageBitmap(getRoundedShape(bitmap)) else {
-                image.setImageBitmap(getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
+            if (bitmap != null) image.setImageBitmap(TracksHelper.instance().getRoundedShape(bitmap)) else {
+                image.setImageBitmap(TracksHelper.instance().getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
             }
         }
 
@@ -109,7 +91,7 @@ class PlayerFragment: Fragment() {
             0 -> {
                 title.text = getString(R.string.no_title)
                 artist.text = getString(R.string.no_artist)
-                image.setImageBitmap(getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
+                image.setImageBitmap(TracksHelper.instance().getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
                 playPause.setImageDrawable(AppCompatDrawableManager.get().getDrawable(context, R.drawable.play))
                 isPlaying = false
                 playPause.isEnabled = false

@@ -3,6 +3,7 @@ package gabyshev.denis.musicplayer.fragments
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
+import gabyshev.denis.musicplayer.fragments.albums.AlbumsFragment
 import gabyshev.denis.musicplayer.fragments.playlists.PlaylistsFragment
 import gabyshev.denis.musicplayer.fragments.tracks.TracksFragment
 
@@ -14,7 +15,9 @@ class PlayerViewPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm
 
     override fun getItem(position: Int): Fragment {
         if(position == 0)
-        return TracksFragment.instance()!!
+            return TracksFragment.instance()!!
+        else if(position == 2)
+            return AlbumsFragment()
         else
             return PlaylistsFragment()
     }

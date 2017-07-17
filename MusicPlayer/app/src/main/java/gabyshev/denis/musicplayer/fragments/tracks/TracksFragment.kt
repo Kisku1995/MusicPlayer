@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.utils.TracksHelper
 import org.jetbrains.anko.find
 
 /**
@@ -44,7 +44,7 @@ class TracksFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = LayoutInflater.from(context).inflate(R.layout.fragment_tracks, container, false)
+        val view: View = LayoutInflater.from(context).inflate(R.layout.fragment_recycler_view, container, false)
 
         mRecyclerView = view.find(R.id.recyclerView)
 
