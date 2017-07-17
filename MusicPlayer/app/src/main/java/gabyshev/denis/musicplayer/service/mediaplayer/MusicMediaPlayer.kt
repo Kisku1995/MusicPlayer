@@ -24,9 +24,9 @@ import gabyshev.denis.musicplayer.service.TrackData
  * Created by Borya on 15.07.2017.
  */
 
-class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
+class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionListener {
     //private var audioManager: AudioManager = null
-    private var mediaPlayer: MediaPlayer = MediaPlayer()
+    var mediaPlayer: MediaPlayer = MediaPlayer()
     private var playlist: ArrayList<TrackData>? = null
     private var activeAudio: Int = 0
     private var resumePosition: Int = 0
@@ -35,6 +35,11 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
     private val TAG = "MusicMediaPlayer"
 
     init {
+       initMediaPlayer()
+        RxListener()
+    }
+
+    fun initMediaPlayer() {
         val audioAttributes: AudioAttributes = AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -42,8 +47,6 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
 
         mediaPlayer.setOnCompletionListener(this)
         mediaPlayer.setAudioAttributes(audioAttributes)
-
-        RxListener()
     }
 
     fun playTrack() {
@@ -73,10 +76,6 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
 
     override fun onCompletion(p0: MediaPlayer?) {
         nextTrack()
-    }
-
-    override fun onAudioFocusChange(focusState: Int) {
-
     }
 
     private fun RxListener() {
