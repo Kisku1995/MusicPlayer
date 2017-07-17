@@ -10,7 +10,9 @@ import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
 import gabyshev.denis.musicplayer.service.TrackData
+import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
 import io.reactivex.Observable
+import io.reactivex.functions.Consumer
 import java.util.*
 
 /**
@@ -35,23 +37,39 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
         holder?.itemView?.setOnClickListener {
             if(!MediaPlayerService.isRunning(context, MediaPlayerService::class.java)) {
                 Log.d(TAG, "service not running")
+
                 context.startService(Intent(context, MediaPlayerService::class.java))
+                RxServiceActivity.instance()?.getServiceActivity()?.subscribe({
+                    if(it.action == -1) {
+                        RxMediaPlayerBus.instance()?.setPlaylist(arrayTracks)
+                        RxMediaPlayerBus.instance()?.setActiveAudioAndPlay(position)
+                    }
+                })
+
+//               Observable.just(foo())
+//                       .map { foo1()}
+//                       .map { foo2(position)}.subscribe()
+
             } else {
                 Log.d(TAG, "service running")
                 RxMediaPlayerBus.instance()?.setPlaylist(arrayTracks)
                 RxMediaPlayerBus.instance()?.setActiveAudioAndPlay(position)
             }
-
-
-
-
-
-
-
         }
     }
 
+    fun foo() {
+        Log.d(TAG, "map0")
 
+    }
 
+    fun foo1() {
+        Log.d(TAG, "Map1")
+        RxMediaPlayerBus.instance()!!.setPlaylist(arrayTracks)
+    }
 
+    fun foo2(position: Int) {
+        Log.d(TAG, "map2")
+        RxMediaPlayerBus.instance()!!.setActiveAudioAndPlay(position)
+    }
 }

@@ -45,10 +45,12 @@ class PlayerFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         image.setImageBitmap(getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
         RxListener()
+
         if(RxServiceActivity.instance()?.track != null) {
             Log.d(TAG, RxServiceActivity.instance()?.track?.track?.title)
             setPlayer(RxServiceActivity.instance()?.track!!)
         }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -93,12 +95,14 @@ class PlayerFragment: Fragment() {
     }
 
     private fun setPlayer(it: ServiceActivity) {
-        title.text = it.track.title
-        artist.text = it.track.artist
+        if(it.action >= 0) {
+            title.text = it.track?.title
+            artist.text = it.track?.artist
 
-        val bitmap: Bitmap? = BitmapFactory.decodeFile(TracksHelper.instance().getAlbumImagePath(context, it.track.albumId))
-        if(bitmap != null) image.setImageBitmap(getRoundedShape(bitmap)) else {
-            image.setImageBitmap(getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
+            val bitmap: Bitmap? = BitmapFactory.decodeFile(TracksHelper.instance().getAlbumImagePath(context, it.track!!.albumId))
+            if (bitmap != null) image.setImageBitmap(getRoundedShape(bitmap)) else {
+                image.setImageBitmap(getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
+            }
         }
 
         when(it.action) {

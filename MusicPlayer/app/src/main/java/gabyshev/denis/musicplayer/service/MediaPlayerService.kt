@@ -10,6 +10,7 @@ import android.media.AudioManager
 import android.os.IBinder
 import android.util.Log
 import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
+import gabyshev.denis.musicplayer.service.activityplayer.ServiceActivity
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
 import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
 
@@ -92,6 +93,10 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
                     stopSelf()
                 }
             }
+
+            if(action == null) {
+                RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(null, -1))
+            }
         }
     }
 
@@ -100,7 +105,8 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
             if(it == 0) {
                 musicMediaPlayer.pauseTrack()
                 musicMediaPlayer.buildNotification(this, musicMediaPlayer.getCurrentTrack()!!)
-            } else {
+            }
+            if(it == 1){
                 musicMediaPlayer.resumeTrack()
                 musicMediaPlayer.buildNotification(this, musicMediaPlayer.getCurrentTrack()!!)
             }
