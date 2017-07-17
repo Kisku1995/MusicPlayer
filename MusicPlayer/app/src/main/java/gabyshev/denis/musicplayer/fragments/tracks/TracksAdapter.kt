@@ -22,10 +22,6 @@ import java.util.*
 class TracksAdapter(private val context: Context, private val arrayTracks: ArrayList<TrackData>): RecyclerView.Adapter<TracksHolder>() {
     private val TAG = "TracksAdapter"
 
-    init {
-//        MusicMediaPlayer.instance()!!.setPlaylist(arrayTracks)
-    }
-
     override fun getItemCount(): Int = arrayTracks.size
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TracksHolder {

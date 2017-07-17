@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.fragments.RxMenuViewPager
 
 /**
  * Created by 1 on 17.07.2017.
@@ -17,8 +16,7 @@ class MenuAdapter(private val context: Context, private val manager: LinearLayou
     private val menuItems = arrayOf("tracks", "playlists", "albums", "artists", "genres")
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MenuHolder {
-        RxListener()
-        return MenuHolder(LayoutInflater.from(context).inflate(R.layout.activity_main_menu, parent, false))
+        return MenuHolder(context, LayoutInflater.from(context).inflate(R.layout.activity_main_menu, parent, false))
     }
 
     override fun onBindViewHolder(holder: MenuHolder?, position: Int) {
@@ -27,17 +25,17 @@ class MenuAdapter(private val context: Context, private val manager: LinearLayou
 
     override fun getItemCount(): Int = menuItems.size
 
-    private fun RxListener() {
-        RxMenuViewPager.instance()?.getFromViewPagerMenu()?.subscribe({
-            Log.d(TAG, "getFromViewPagerMenu ${it}")
-            val firstVisible = manager.findFirstVisibleItemPosition()
-            val lastVisible = manager.findLastVisibleItemPosition()
+    fun setSelectedHolder(position: Int) {
+        Log.d(TAG, "getFromViewPagerMenu ${position}")
+        val firstVisible = manager.findFirstVisibleItemPosition()
+        val lastVisible = manager.findLastVisibleItemPosition()
 
-            for(i in firstVisible..lastVisible) {
-                MenuHolder(manager.findViewByPosition(i)).unselected()
-            }
+        for(i in firstVisible..lastVisible) {
+            if(position != i) MenuHolder(context, manager.findViewByPosition(i)).unselected()
+            else MenuHolder(context, manager.findViewByPosition(i)).selected()
+        }
 
-            MenuHolder(manager.findViewByPosition(it)).selected()
-        })
+        notifyDataSetChanged()
+
     }
 }
