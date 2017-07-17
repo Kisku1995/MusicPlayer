@@ -3,16 +3,16 @@ package gabyshev.denis.musicplayer.fragments.player
 import android.app.Fragment
 import android.graphics.*
 import android.os.Bundle
-import android.util.Log
+import android.support.v7.widget.AppCompatDrawableManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.fragments.RxServiceActivity
+import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
 import gabyshev.denis.musicplayer.fragments.tracks.TracksHelper
-import gabyshev.denis.musicplayer.service.TrackData
+import gabyshev.denis.musicplayer.service.MediaPlayerService
 import org.jetbrains.anko.find
 
 /**
@@ -22,6 +22,9 @@ class PlayerFragment: Fragment() {
     private lateinit var image: ImageView
     private lateinit var title: TextView
     private lateinit var artist: TextView
+    private lateinit var playPause: ImageView
+
+    private var isPlaying = false
 
     companion object {
         private var instance: PlayerFragment? = null
@@ -45,6 +48,7 @@ class PlayerFragment: Fragment() {
         image = view.find(R.id.image)
         title = view.find(R.id.title)
         artist = view.find(R.id.artist)
+        playPause = view.find(R.id.playPause)
         return view
     }
 
@@ -67,6 +71,14 @@ class PlayerFragment: Fragment() {
     }
 
     fun RxListener() {
+        playPause.setOnClickListener {
+            if(MediaPlayerService.isRunning(context,  MediaPlayerService::class.java) && isPlaying) {
+                RxServiceActivity.instance()?.setActivityService(0)
+            } else {
+                RxServiceActivity.instance()?.setActivityService(1)
+            }
+        }
+
         RxServiceActivity.instance()?.getServiceActivity()?.subscribe({
             title.text = it.track.title
             artist.text = it.track.artist
@@ -75,6 +87,27 @@ class PlayerFragment: Fragment() {
             if(bitmap != null) image.setImageBitmap(getRoundedShape(bitmap)) else {
                 image.setImageBitmap(getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
             }
+
+            when(it.action) {
+                0 -> {
+                    title.text = getString(R.string.no_title)
+                    artist.text = getString(R.string.no_artist)
+                    image.setImageBitmap(getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
+                    playPause.setImageDrawable(AppCompatDrawableManager.get().getDrawable(context, R.drawable.play))
+                    isPlaying = false
+                    playPause.isEnabled = false
+                }
+                1 -> {
+                    playPause.setImageDrawable(AppCompatDrawableManager.get().getDrawable(context, R.drawable.pause))
+                    isPlaying = true
+                    playPause.isEnabled = true
+                }
+                2 -> {
+                    playPause.setImageDrawable(AppCompatDrawableManager.get().getDrawable(context, R.drawable.play))
+                    isPlaying = false
+                }
+            }
         })
     }
+
 }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
 import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
 
@@ -28,6 +29,10 @@ class MediaPlayerService: Service() {
             }
             return false
         }
+    }
+
+    init {
+        RxListener()
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -66,7 +71,21 @@ class MediaPlayerService: Service() {
         }
     }
 
+    private fun RxListener() {
+        RxServiceActivity.instance()?.getActivityService()?.subscribe({
+            if(it == 0) {
+                musicMediaPlayer.pauseTrack()
+                musicMediaPlayer.buildNotification(this, musicMediaPlayer.getCurrentTrack()!!)
+            } else {
+                musicMediaPlayer.resumeTrack()
+                musicMediaPlayer.buildNotification(this, musicMediaPlayer.getCurrentTrack()!!)
+            }
+        })
+    }
+
     override fun onDestroy() {
+        RxServiceActivity.instance()?.getActivityService()?.onComplete()
+        RxServiceActivity.instance()?.createActivityService()
         musicMediaPlayer.onDestroy()
         stopForeground(true)
         super.onDestroy()

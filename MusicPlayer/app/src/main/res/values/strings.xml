@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MusicPlayer</string>
+    <string name="no_title">No Title</string>
+    <string name="no_artist">No Artist</string>
 </resources>

@@ -1,4 +1,4 @@
-package gabyshev.denis.musicplayer.fragments
+package gabyshev.denis.musicplayer.service.activityplayer
 
 import io.reactivex.subjects.PublishSubject
 
@@ -7,7 +7,8 @@ import io.reactivex.subjects.PublishSubject
  */
 
 class RxServiceActivity {
-    var serviceActivity1 = PublishSubject.create<ServiceActivity>()
+    private var serviceActivity1 = PublishSubject.create<ServiceActivity>()
+    private var activityService1 = PublishSubject.create<Int>()
 
     companion object {
         private var instance: RxServiceActivity? = null
@@ -25,4 +26,16 @@ class RxServiceActivity {
     }
 
     fun getServiceActivity(): PublishSubject<ServiceActivity> = serviceActivity1
+
+    fun setActivityService(action: Int) {
+        activityService1.onNext(action)
+    }
+
+    fun getActivityService(): PublishSubject<Int> = activityService1
+
+    fun createActivityService() {
+        activityService1 = PublishSubject.create<Int>()
+    }
+
+
 }

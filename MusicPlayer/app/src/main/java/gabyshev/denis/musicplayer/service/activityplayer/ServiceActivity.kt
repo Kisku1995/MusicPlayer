@@ -1,4 +1,4 @@
-package gabyshev.denis.musicplayer.fragments
+package gabyshev.denis.musicplayer.service.activityplayer
 
 import gabyshev.denis.musicplayer.service.TrackData
 

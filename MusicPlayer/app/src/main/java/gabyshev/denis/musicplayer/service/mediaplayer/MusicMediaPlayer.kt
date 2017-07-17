@@ -14,14 +14,11 @@ import android.util.Log
 import android.widget.RemoteViews
 import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.fragments.RxServiceActivity
-import gabyshev.denis.musicplayer.fragments.ServiceActivity
-import gabyshev.denis.musicplayer.fragments.player.PlayerFragment
+import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
+import gabyshev.denis.musicplayer.service.activityplayer.ServiceActivity
 import gabyshev.denis.musicplayer.fragments.tracks.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.TrackData
-import io.reactivex.Scheduler
-import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by Borya on 15.07.2017.
@@ -57,7 +54,7 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         buildNotification(service.applicationContext, playlist!![activeAudio])
         mediaPlayer.prepare()
         mediaPlayer.start()
-        RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 0))
+        RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 1))
     }
 
     fun setActiveAudioAndPlay(activeAudioPosition: Int) {
@@ -160,16 +157,19 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         isPlaying = false
         resumePosition = mediaPlayer.currentPosition
         mediaPlayer.pause()
+        RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 2))
     }
 
     fun resumeTrack() {
         isPlaying = true
         mediaPlayer.seekTo(resumePosition)
         mediaPlayer.start()
+        RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 1))
     }
 
     fun onDestroy() {
         mediaPlayer.release()
+        RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 0))
         RxMediaPlayerBus.instance()?.getPlaylist()?.onComplete()
         RxMediaPlayerBus.instance()?.getActiveAudioAndPlay()?.onComplete()
         RxMediaPlayerBus.instance()?.createAgain()
