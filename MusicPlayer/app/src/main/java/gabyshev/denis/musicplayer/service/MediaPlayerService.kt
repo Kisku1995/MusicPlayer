@@ -84,9 +84,9 @@ class MediaPlayerService: Service() {
     }
 
     override fun onDestroy() {
+        musicMediaPlayer.onDestroy()
         RxServiceActivity.instance()?.getActivityService()?.onComplete()
         RxServiceActivity.instance()?.createActivityService()
-        musicMediaPlayer.onDestroy()
         stopForeground(true)
         super.onDestroy()
     }

@@ -37,5 +37,9 @@ class RxServiceActivity {
         activityService1 = PublishSubject.create<Int>()
     }
 
+    fun createServiceActivity() {
+        serviceActivity1 = PublishSubject.create<ServiceActivity>()
+    }
+
 
 }

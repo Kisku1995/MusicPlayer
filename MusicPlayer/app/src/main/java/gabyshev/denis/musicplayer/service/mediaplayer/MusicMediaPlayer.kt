@@ -126,7 +126,7 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         val pIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
         val notificationBuilder = NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.play)
+                .setSmallIcon(R.drawable.music)
                 .setContent(views)
                 .setContentIntent(pIntent)
 

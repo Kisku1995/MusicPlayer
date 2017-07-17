@@ -110,4 +110,10 @@ class PlayerFragment: Fragment() {
         })
     }
 
+    override fun onDestroy() {
+        RxServiceActivity.instance()?.getServiceActivity()?.onComplete()
+        RxServiceActivity.instance()?.createServiceActivity()
+        super.onDestroy()
+    }
+
 }
