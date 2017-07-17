@@ -6,4 +6,4 @@
 Особенности
 -----
 Плеер-уведомление
-<p align="center"><img src="https://raw.githubusercontent.com/dns21395/Eventy/master/ReadmeFiles/notification.png" width="360" /></p>
+<p align="center"><img src="https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/notification.png" width="360" /></p>
