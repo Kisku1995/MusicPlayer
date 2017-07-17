@@ -60,7 +60,7 @@ class MediaPlayerService: Service() {
     }
 
     override fun onDestroy() {
-        RxMediaPlayerBus.instance.
+        musicMediaPlayer.onDestroy()
         musicMediaPlayer.mediaPlayer.release()
         stopForeground(true)
         super.onDestroy()

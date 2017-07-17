@@ -9,11 +9,11 @@ import io.reactivex.subjects.PublishSubject
  */
 
 class RxMediaPlayerBus {
-    val subject = PublishSubject.create<Any>()
-    val position = PublishSubject.create<Int>()
+    var subject = PublishSubject.create<Any>()
+    var position = PublishSubject.create<Int>()
 
     companion object {
-        var instance: RxMediaPlayerBus? = null
+        private var instance: RxMediaPlayerBus? = null
 
         fun instance(): RxMediaPlayerBus? {
             if(instance == null) {
@@ -35,6 +35,11 @@ class RxMediaPlayerBus {
 
     fun getPlaylist(): PublishSubject<Any>? {
         return subject
+    }
+
+    fun createAgain() {
+        subject = PublishSubject.create<Any>()
+        position = PublishSubject.create<Int>()
     }
 
 

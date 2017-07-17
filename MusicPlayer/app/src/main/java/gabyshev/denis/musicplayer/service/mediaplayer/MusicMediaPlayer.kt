@@ -76,12 +76,15 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
     }
 
     private fun RxListener() {
+        Log.d(TAG, "RxListener")
         RxMediaPlayerBus.instance()?.getPlaylist()?.subscribe({
+            Log.d(TAG, "getPlaylis")
             @Suppress("UNCHECKED_CAST")
             setPlaylist(it as? ArrayList<TrackData> ?: ArrayList<TrackData>())
         })
 
         RxMediaPlayerBus.instance()?.getActiveAudioAndPlay()?.subscribe({
+            Log.d(TAG, "getActiveAudioAndPlay")
             setActiveAudioAndPlay(it)
             Log.d(TAG, "POSITION : ${it}")
         })
@@ -133,5 +136,11 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         activeAudio--
         if(activeAudio < 0) activeAudio = playlist!!.size - 1
         playTrack()
+    }
+
+    fun onDestroy() {
+        RxMediaPlayerBus.instance()?.getPlaylist()?.onComplete()
+        RxMediaPlayerBus.instance()?.getActiveAudioAndPlay()?.onComplete()
+        RxMediaPlayerBus.instance()?.createAgain()
     }
 }
