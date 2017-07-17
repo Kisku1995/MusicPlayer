@@ -55,6 +55,7 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         mediaPlayer.prepare()
         mediaPlayer.start()
         RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 1))
+        RxServiceActivity.instance()?.track = ServiceActivity(playlist!![activeAudio], 1)
     }
 
     fun setActiveAudioAndPlay(activeAudioPosition: Int) {
@@ -158,6 +159,7 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         resumePosition = mediaPlayer.currentPosition
         mediaPlayer.pause()
         RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 2))
+        RxServiceActivity.instance()?.track = ServiceActivity(playlist!![activeAudio], 2)
     }
 
     fun resumeTrack() {
@@ -165,10 +167,12 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         mediaPlayer.seekTo(resumePosition)
         mediaPlayer.start()
         RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 1))
+        RxServiceActivity.instance()?.track = ServiceActivity(playlist!![activeAudio], 1)
     }
 
     fun onDestroy() {
         mediaPlayer.release()
+        RxServiceActivity.instance()?.track = null
         RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 0))
         RxMediaPlayerBus.instance()?.getPlaylist()?.onComplete()
         RxMediaPlayerBus.instance()?.getActiveAudioAndPlay()?.onComplete()

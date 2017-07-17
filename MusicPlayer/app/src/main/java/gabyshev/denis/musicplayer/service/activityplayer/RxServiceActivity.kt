@@ -1,5 +1,6 @@
 package gabyshev.denis.musicplayer.service.activityplayer
 
+import gabyshev.denis.musicplayer.service.TrackData
 import io.reactivex.subjects.PublishSubject
 
 /**
@@ -9,6 +10,7 @@ import io.reactivex.subjects.PublishSubject
 class RxServiceActivity {
     private var serviceActivity1 = PublishSubject.create<ServiceActivity>()
     private var activityService1 = PublishSubject.create<Int>()
+    var track: ServiceActivity? = null
 
     companion object {
         private var instance: RxServiceActivity? = null
