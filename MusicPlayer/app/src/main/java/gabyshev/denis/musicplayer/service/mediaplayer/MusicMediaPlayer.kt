@@ -25,11 +25,12 @@ import io.reactivex.schedulers.Schedulers
  */
 
 class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
-    // don't forget to release mediaplayer
     //private var audioManager: AudioManager = null
-    var mediaPlayer: MediaPlayer = MediaPlayer()
+    private var mediaPlayer: MediaPlayer = MediaPlayer()
     private var playlist: ArrayList<TrackData>? = null
     private var activeAudio: Int = 0
+    private var resumePosition: Int = 0
+    private var isPlaying = true
 
     private val TAG = "MusicMediaPlayer"
 
@@ -104,11 +105,21 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         }
 
         views.setOnClickPendingIntent(R.id.previous, playbackAction(context, 0))
-        views.setOnClickPendingIntent(R.id.playPause, playbackAction(context, 1))
-        views.setOnClickPendingIntent(R.id.next, playbackAction(context, 2))
-        views.setOnClickPendingIntent(R.id.close, playbackAction(context, 3))
+
+        if(isPlaying) {
+            views.setImageViewResource(R.id.playPause, R.drawable.pause)
+            views.setOnClickPendingIntent(R.id.playPause, playbackAction(context, 1))
+        } else {
+            views.setImageViewResource(R.id.playPause, R.drawable.play)
+            views.setOnClickPendingIntent(R.id.playPause, playbackAction(context, 2))
+        }
+
+        views.setOnClickPendingIntent(R.id.next, playbackAction(context, 3))
+        views.setOnClickPendingIntent(R.id.close, playbackAction(context, 4))
 
         val intent = Intent(context, MainActivity::class.java)
+        intent.action = Intent.ACTION_MAIN
+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
 
         val pIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
@@ -126,6 +137,8 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         return PendingIntent.getService(context, action, playbackAction, 0)
     }
 
+    fun getCurrentTrack(): TrackData? = playlist?.get(activeAudio)
+
     fun nextTrack() {
         activeAudio++
         if(activeAudio == playlist?.size) activeAudio = 0
@@ -138,7 +151,20 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         playTrack()
     }
 
+    fun pauseTrack() {
+        isPlaying = false
+        resumePosition = mediaPlayer.currentPosition
+        mediaPlayer.pause()
+    }
+
+    fun resumeTrack() {
+        isPlaying = true
+        mediaPlayer.seekTo(resumePosition)
+        mediaPlayer.start()
+    }
+
     fun onDestroy() {
+        mediaPlayer.release()
         RxMediaPlayerBus.instance()?.getPlaylist()?.onComplete()
         RxMediaPlayerBus.instance()?.getActiveAudioAndPlay()?.onComplete()
         RxMediaPlayerBus.instance()?.createAgain()

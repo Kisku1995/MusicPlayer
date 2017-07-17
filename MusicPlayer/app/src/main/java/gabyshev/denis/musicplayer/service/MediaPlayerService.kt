@@ -48,11 +48,18 @@ class MediaPlayerService: Service() {
                 "0" -> {
                     musicMediaPlayer.previousTrack()
                 }
+                "1" -> {
+                    musicMediaPlayer.pauseTrack()
+                    musicMediaPlayer.buildNotification(this, musicMediaPlayer.getCurrentTrack()!!)
+                }
                 "2" -> {
-                    musicMediaPlayer.nextTrack()
-                    Log.d(TAG, "action 2")
+                    musicMediaPlayer.resumeTrack()
+                    musicMediaPlayer.buildNotification(this, musicMediaPlayer.getCurrentTrack()!!)
                 }
                 "3" -> {
+                    musicMediaPlayer.nextTrack()
+                }
+                "4" -> {
                     stopSelf()
                 }
             }
@@ -61,7 +68,6 @@ class MediaPlayerService: Service() {
 
     override fun onDestroy() {
         musicMediaPlayer.onDestroy()
-        musicMediaPlayer.mediaPlayer.release()
         stopForeground(true)
         super.onDestroy()
     }
