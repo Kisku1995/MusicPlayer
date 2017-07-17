@@ -14,6 +14,9 @@ import android.util.Log
 import android.widget.RemoteViews
 import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.fragments.RxServiceActivity
+import gabyshev.denis.musicplayer.fragments.ServiceActivity
+import gabyshev.denis.musicplayer.fragments.player.PlayerFragment
 import gabyshev.denis.musicplayer.fragments.tracks.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.TrackData
@@ -47,12 +50,14 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
     }
 
     fun playTrack() {
+        isPlaying = true
         mediaPlayer.stop()
         mediaPlayer.reset()
         mediaPlayer.setDataSource(playlist?.get(activeAudio)?.data)
         buildNotification(service.applicationContext, playlist!![activeAudio])
         mediaPlayer.prepare()
         mediaPlayer.start()
+        RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 0))
     }
 
     fun setActiveAudioAndPlay(activeAudioPosition: Int) {

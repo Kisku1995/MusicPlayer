@@ -4,9 +4,19 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
+    <fragment
+        android:id="@+id/player"
+        android:layout_alignParentBottom="true"
+        android:name="gabyshev.denis.musicplayer.fragments.player.PlayerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
+        android:layout_above="@id/player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+
 
 </RelativeLayout>
