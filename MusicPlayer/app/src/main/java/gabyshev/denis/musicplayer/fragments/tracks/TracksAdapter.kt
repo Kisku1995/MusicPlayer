@@ -40,36 +40,16 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
 
                 context.startService(Intent(context, MediaPlayerService::class.java))
                 RxServiceActivity.instance()?.getServiceActivity()?.subscribe({
-                    if(it.action == -1) {
-                        RxMediaPlayerBus.instance()?.setPlaylist(arrayTracks)
-                        RxMediaPlayerBus.instance()?.setActiveAudioAndPlay(position)
-                    }
+                        if(it.action == -1) {
+                            RxMediaPlayerBus.instance()?.setPlaylist(arrayTracks)
+                            RxMediaPlayerBus.instance()?.setActiveAudioAndPlay(position)
+                        }
                 })
-
-//               Observable.just(foo())
-//                       .map { foo1()}
-//                       .map { foo2(position)}.subscribe()
-
             } else {
                 Log.d(TAG, "service running")
                 RxMediaPlayerBus.instance()?.setPlaylist(arrayTracks)
                 RxMediaPlayerBus.instance()?.setActiveAudioAndPlay(position)
             }
         }
-    }
-
-    fun foo() {
-        Log.d(TAG, "map0")
-
-    }
-
-    fun foo1() {
-        Log.d(TAG, "Map1")
-        RxMediaPlayerBus.instance()!!.setPlaylist(arrayTracks)
-    }
-
-    fun foo2(position: Int) {
-        Log.d(TAG, "map2")
-        RxMediaPlayerBus.instance()!!.setActiveAudioAndPlay(position)
     }
 }
