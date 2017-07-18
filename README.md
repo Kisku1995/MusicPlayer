@@ -10,5 +10,8 @@
 Плеер-уведомление
 <p align="center"><img src="https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/notification.png" width="360" /></p>
 
-Категория альбомы
-<p align="center"><img src="https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/albums.png" width="360" /></p>
+Категория треки, плэйлисты, альбомы, артисты, жанры
+
+Альбомы       |  Артисы
+:-------------------------:|:-------------------------:
+![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/albums.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/artists.png)

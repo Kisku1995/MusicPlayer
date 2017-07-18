@@ -53,7 +53,7 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
             true
         })
     }
-    
+
     private fun playTrack(position: Int) {
         if(!MediaPlayerService.isRunning(context, MediaPlayerService::class.java)) {
             Log.d(TAG, "service not running")
