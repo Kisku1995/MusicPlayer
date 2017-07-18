@@ -93,7 +93,9 @@ class TracksHelper {
                 val id: Int = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums._ID)).toInt()
                 val album: String = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM))
                 val artist: String = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST))
-                val cover: String = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART))
+                var cover: String? = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART))
+
+
 
                 cursor.moveToNext()
 

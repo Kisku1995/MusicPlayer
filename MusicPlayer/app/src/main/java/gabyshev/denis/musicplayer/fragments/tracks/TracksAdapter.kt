@@ -84,6 +84,8 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
         } else {
             TracksHelper.instance().setSelectedBackground(context, holder.itemView, position)
         }
+        if(selectedTracks.size >= 2) selectListener.countSelect((selectedTracks.size).toString())
+
 
     }
 
@@ -100,7 +102,7 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
             }
         }
 
-        //selectListener.countSelect(arrayTracks.size.toString())
+
         selectedTracks.add(arrayTracks[position])
 
 

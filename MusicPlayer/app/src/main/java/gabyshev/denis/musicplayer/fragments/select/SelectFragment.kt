@@ -15,6 +15,11 @@ import org.jetbrains.anko.find
 class SelectFragment: Fragment() {
     private lateinit var selectCount: TextView
 
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        selectCount.text = "1 ${getString(R.string.items_selected)}"
+    }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = LayoutInflater.from(context).inflate(R.layout.fragment_select, container, false)
 
@@ -24,6 +29,6 @@ class SelectFragment: Fragment() {
     }
 
     fun selectCount(text: String) {
-        selectCount.text = text
+        selectCount.text = "$text ${getString(R.string.items_selected)}"
     }
 }

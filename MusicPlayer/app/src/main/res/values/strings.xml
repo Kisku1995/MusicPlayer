@@ -4,4 +4,5 @@
     <string name="no_artist">No Artist</string>
     <string name="tracks">Tracks</string>
     <string name="albums">Albums</string>
+    <string name="items_selected">item(s) selected</string>
 </resources>

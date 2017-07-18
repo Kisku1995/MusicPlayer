@@ -28,12 +28,23 @@ class AlbumHolder(val view: View) : RecyclerView.ViewHolder(view) {
         this.album.text = album.album
         artist.text = album.artist
 
-        Picasso.with(context)
-                .load(Uri.fromFile(File(album.cover)))
-                .transform(CircleTransform())
-                .resize(96, 96)
-                .centerCrop()
-                .into(cover)
+
+        if(album.cover != null) {
+            Picasso.with(context)
+                    .load(Uri.fromFile(File(album.cover)))
+                    .transform(CircleTransform())
+                    .resize(96, 96)
+                    .centerCrop()
+                    .into(cover)
+        } else {
+            Picasso.with(context)
+                    .load(Uri.parse("android.resource://gabyshev.denis.musicplayer/drawable/no_music"))
+                    .transform(CircleTransform())
+                    .resize(96, 96)
+                    .centerCrop()
+                    .into(cover)
+        }
+
 
         TracksHelper.instance().setBackground(context, view, position)
     }
