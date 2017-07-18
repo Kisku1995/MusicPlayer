@@ -1,5 +1,6 @@
 package gabyshev.denis.musicplayer.fragments.tracks
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
@@ -22,7 +23,7 @@ import java.util.*
 
 class TracksAdapter(private val context: Context, private val arrayTracks: ArrayList<TrackData>): RecyclerView.Adapter<TracksHolder>() {
     private val TAG = "TracksAdapter"
-//    var selectListener: SelectListener = context as SelectListener
+    var selectListener: SelectListener = context as SelectListener
 
     override fun getItemCount(): Int = arrayTracks.size
 
@@ -51,7 +52,7 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
         }
 
         holder?.itemView?.setOnLongClickListener(View.OnLongClickListener {
-           // selectListener.startSelect()
+            selectListener.startSelect()
             false
         })
     }

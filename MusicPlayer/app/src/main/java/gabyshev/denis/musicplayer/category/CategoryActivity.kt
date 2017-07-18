@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.fragments.tracks.TracksAdapter
+import gabyshev.denis.musicplayer.utils.SelectCallback
 import gabyshev.denis.musicplayer.utils.SelectListener
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.data.TrackData
@@ -24,6 +25,8 @@ class CategoryActivity: AppCompatActivity(), SelectListener {
     private var categoryId: Int = -1
     private var category: Int = -1 // 0 - albums, 1 - artists, 2 - genres
     private var title: String = ""
+
+    private lateinit var callback: SelectCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

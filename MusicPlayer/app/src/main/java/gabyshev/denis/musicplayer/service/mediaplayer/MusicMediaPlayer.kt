@@ -53,7 +53,7 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         mediaPlayer.stop()
         mediaPlayer.reset()
         mediaPlayer.setDataSource(playlist?.get(activeAudio)?.data)
-        buildNotification(service.applicationContext, playlist!![activeAudio])
+        buildNotification(playlist!![activeAudio])
         mediaPlayer.prepare()
         mediaPlayer.start()
         RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 1))
@@ -92,7 +92,8 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         })
     }
 
-    fun buildNotification(context: Context, track: TrackData){
+    fun buildNotification(track: TrackData){
+        val context: Context = service.applicationContext
         val views: RemoteViews = RemoteViews(context.packageName, R.layout.media_player_notification)
 
         views.setTextViewText(R.id.title, track.title)
@@ -156,6 +157,7 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         isPlaying = false
         resumePosition = mediaPlayer.currentPosition
         mediaPlayer.pause()
+        buildNotification(playlist!![activeAudio])
         RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 2))
         RxServiceActivity.instance()?.track = ServiceActivity(playlist!![activeAudio], 2)
     }
@@ -164,6 +166,7 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         isPlaying = true
         mediaPlayer.seekTo(resumePosition)
         mediaPlayer.start()
+        buildNotification(playlist!![activeAudio])
         RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 1))
         RxServiceActivity.instance()?.track = ServiceActivity(playlist!![activeAudio], 1)
     }

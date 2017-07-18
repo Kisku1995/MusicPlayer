@@ -10,12 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.events.MediaPlayerStatusEvent
 import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.activityplayer.ServiceActivity
+import gabyshev.denis.musicplayer.utils.RxBus
 import org.jetbrains.anko.find
+import javax.inject.Inject
 
 /**
  * Created by 1 on 17.07.2017.
@@ -23,12 +27,16 @@ import org.jetbrains.anko.find
 class PlayerFragment: Fragment() {
     private val TAG = "PlayerFragment"
 
+   @Inject lateinit var rxBus: RxBus
+
     private lateinit var image: ImageView
     private lateinit var title: TextView
     private lateinit var artist: TextView
     private lateinit var playPause: ImageView
 
     private var isPlaying = false
+
+
 
     companion object {
         private var instance: PlayerFragment? = null
@@ -43,6 +51,9 @@ class PlayerFragment: Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (context.applicationContext as App).component.inject(this)
+
         image.setImageBitmap(TracksHelper.instance().getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
         RxListener()
 
@@ -65,7 +76,8 @@ class PlayerFragment: Fragment() {
     fun RxListener() {
         playPause.setOnClickListener {
             if(MediaPlayerService.isRunning(context,  MediaPlayerService::class.java) && isPlaying) {
-                RxServiceActivity.instance()?.setActivityService(0)
+                rxBus.send(MediaPlayerStatusEvent(0))
+//                RxServiceActivity.instance()?.setActivityService(0)
             } else {
                 RxServiceActivity.instance()?.setActivityService(1)
             }
