@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.data.Genre
 import org.jetbrains.anko.find
 
@@ -17,11 +18,8 @@ class GenreHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 
     fun setHolder(context: Context, genre: Genre, position: Int) {
         this.name.text = genre.name
-        setBackground(context, position)
+        TracksHelper.instance().setBackground(context, view, position)
     }
 
-    private fun setBackground(context: Context, position: Int) {
-        if(position % 2 == 0) view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_even)
-        else view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_odd)
-    }
+
 }

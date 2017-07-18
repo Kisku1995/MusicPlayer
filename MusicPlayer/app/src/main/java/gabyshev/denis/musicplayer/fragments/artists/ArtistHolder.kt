@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.data.Artist
 import kotlinx.android.synthetic.main.fragment_albums_item.*
 import org.jetbrains.anko.find
@@ -23,11 +24,8 @@ class ArtistHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         albumsCount.text = "${artist.albumCount.toString()} ${context.getString(R.string.albums)}"
         tracksCount.text = "${artist.trackCount.toString()} ${context.getString(R.string.tracks)}"
 
-        setBackground(context, position)
+        TracksHelper.instance().setBackground(context, view, position)
     }
 
-    private fun setBackground(context: Context, position: Int) {
-        if(position % 2 == 0) view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_even)
-        else view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_odd)
-    }
+
 }

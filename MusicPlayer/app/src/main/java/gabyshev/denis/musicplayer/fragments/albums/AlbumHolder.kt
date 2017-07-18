@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.utils.data.Album
 import gabyshev.denis.musicplayer.utils.CircleTransform
+import gabyshev.denis.musicplayer.utils.TracksHelper
 import org.jetbrains.anko.find
 import java.io.File
 
@@ -34,11 +35,8 @@ class AlbumHolder(private val view: View) : RecyclerView.ViewHolder(view) {
                 .centerCrop()
                 .into(cover)
 
-        setBackground(context, position)
+        TracksHelper.instance().setBackground(context, view, position)
     }
 
-    private fun setBackground(context: Context, position: Int) {
-        if(position % 2 == 0) view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_even)
-        else view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_odd)
-    }
+
 }
