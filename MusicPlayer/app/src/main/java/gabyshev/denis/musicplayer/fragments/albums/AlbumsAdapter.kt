@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.content.Context
 import android.view.LayoutInflater
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.utils.data.Album
 
 /**
  * Created by Borya on 17.07.2017.

@@ -1,6 +1,5 @@
 package gabyshev.denis.musicplayer.service.activityplayer
 
-import gabyshev.denis.musicplayer.service.TrackData
 import io.reactivex.subjects.PublishSubject
 
 /**

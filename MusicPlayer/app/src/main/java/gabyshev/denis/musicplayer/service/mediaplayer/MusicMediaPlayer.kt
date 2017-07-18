@@ -17,7 +17,7 @@ import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
 import gabyshev.denis.musicplayer.service.activityplayer.ServiceActivity
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
-import gabyshev.denis.musicplayer.service.TrackData
+import gabyshev.denis.musicplayer.utils.data.TrackData
 
 /**
  * Created by Borya on 15.07.2017.

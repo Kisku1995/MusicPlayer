@@ -1,7 +1,6 @@
 package gabyshev.denis.musicplayer.service.mediaplayer
 
-import gabyshev.denis.musicplayer.service.TrackData
-import io.reactivex.Observable
+import gabyshev.denis.musicplayer.utils.data.TrackData
 import io.reactivex.subjects.PublishSubject
 
 /**

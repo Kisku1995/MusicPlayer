@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.service.TrackData
+import gabyshev.denis.musicplayer.utils.data.TrackData
 import org.jetbrains.anko.find
 
 /**

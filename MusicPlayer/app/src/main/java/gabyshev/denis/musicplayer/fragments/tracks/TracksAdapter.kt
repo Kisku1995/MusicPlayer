@@ -9,10 +9,8 @@ import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
-import gabyshev.denis.musicplayer.service.TrackData
+import gabyshev.denis.musicplayer.utils.data.TrackData
 import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
-import io.reactivex.Observable
-import io.reactivex.functions.Consumer
 import java.util.*
 
 /**

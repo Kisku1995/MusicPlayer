@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.utils.data.Album
 import gabyshev.denis.musicplayer.utils.CircleTransform
 import org.jetbrains.anko.find
 import java.io.File

@@ -1,4 +1,4 @@
-package gabyshev.denis.musicplayer.fragments.albums
+package gabyshev.denis.musicplayer.utils.data
 
 /**
  * Created by Borya on 17.07.2017.

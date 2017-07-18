@@ -6,8 +6,9 @@ import android.graphics.*
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
-import gabyshev.denis.musicplayer.fragments.albums.Album
-import gabyshev.denis.musicplayer.service.TrackData
+import gabyshev.denis.musicplayer.utils.data.Album
+import gabyshev.denis.musicplayer.utils.data.Artist
+import gabyshev.denis.musicplayer.utils.data.TrackData
 import java.util.*
 
 /**
@@ -97,6 +98,40 @@ class TracksHelper {
         }
 
         return arrayAlbums
+    }
+
+    fun scanForArtists(context: Context): ArrayList<Artist> {
+        var arrayArtists: ArrayList<Artist> = ArrayList<Artist>()
+
+        val uri: Uri = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI
+        val projection = arrayOf(
+                MediaStore.Audio.Artists._ID,
+                MediaStore.Audio.Artists.ARTIST,
+                MediaStore.Audio.Artists.NUMBER_OF_ALBUMS,
+                MediaStore.Audio.Artists.NUMBER_OF_TRACKS
+        )
+
+        val sortOrder = "${MediaStore.Audio.Artists.ARTIST} ASC"
+
+        val cursor: Cursor? = context.contentResolver.query(uri, projection, null, null, sortOrder)
+
+        if(cursor != null) {
+            cursor.moveToFirst()
+            while(!cursor.isAfterLast) {
+                val id: Int = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists._ID)).toInt()
+                val artist: String = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.ARTIST))
+                val albumsCount: Int = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS)).toInt()
+                val tracksCount: Int = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_TRACKS)).toInt()
+
+                cursor.moveToNext()
+
+                arrayArtists.add(Artist(id, artist, albumsCount, tracksCount))
+            }
+
+            cursor.close()
+        }
+
+        return arrayArtists
     }
 
     private fun convertDuration(duration: Long): String {

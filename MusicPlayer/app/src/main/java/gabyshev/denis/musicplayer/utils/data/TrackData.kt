@@ -1,4 +1,4 @@
-package gabyshev.denis.musicplayer.service
+package gabyshev.denis.musicplayer.utils.data
 
 /**
  * Created by Borya on 15.07.2017.

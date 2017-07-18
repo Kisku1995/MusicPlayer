@@ -1,6 +1,6 @@
 package gabyshev.denis.musicplayer.service.activityplayer
 
-import gabyshev.denis.musicplayer.service.TrackData
+import gabyshev.denis.musicplayer.utils.data.TrackData
 
 /**
  * Created by 1 on 17.07.2017.
