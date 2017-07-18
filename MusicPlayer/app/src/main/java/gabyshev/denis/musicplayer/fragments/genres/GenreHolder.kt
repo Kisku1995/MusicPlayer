@@ -13,7 +13,7 @@ import org.jetbrains.anko.find
 /**
  * Created by 1 on 18.07.2017.
  */
-class GenreHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+class GenreHolder(val view: View) : RecyclerView.ViewHolder(view) {
     private val name: TextView = view.find(R.id.genre)
 
     fun setHolder(context: Context, genre: Genre, position: Int) {

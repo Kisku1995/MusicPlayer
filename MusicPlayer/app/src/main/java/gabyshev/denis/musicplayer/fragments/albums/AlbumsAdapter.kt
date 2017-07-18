@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import android.content.Context
 import android.view.LayoutInflater
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.category.Category
+import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.data.Album
 
 /**
@@ -19,6 +21,15 @@ class AlbumsAdapter(private val context: Context, private val albumsArray: Array
 
     override fun onBindViewHolder(holder: AlbumHolder, position: Int) {
         holder.setHolder(context, albumsArray[position], position)
+
+        holder.view.setOnClickListener {
+            TracksHelper.instance().startCategory(context,
+                    Category(
+                            albumsArray[position].id,
+                            0,
+                            albumsArray[position].album
+                    ))
+        }
     }
 
     override fun getItemCount(): Int = albumsArray.size

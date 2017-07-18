@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.category.Category
+import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.data.Genre
 
 /**
@@ -17,6 +19,15 @@ class GenresAdapter(private val context: Context, private val arrayGenres: Array
 
     override fun onBindViewHolder(holder: GenreHolder, position: Int) {
         holder.setHolder(context, arrayGenres[position], position)
+
+        holder.view.setOnClickListener {
+            TracksHelper.instance().startCategory(context,
+                    Category(
+                            arrayGenres[position].id,
+                            2,
+                            arrayGenres[position].name
+                    ))
+        }
     }
 
     override fun getItemCount(): Int = arrayGenres.size

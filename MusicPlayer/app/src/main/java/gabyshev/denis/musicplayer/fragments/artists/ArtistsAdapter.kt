@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.category.Category
+import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.data.Artist
 
 /**
@@ -20,5 +22,14 @@ class ArtistsAdapter(private val context: Context, private val arrayArtists: Arr
 
     override fun onBindViewHolder(holder: ArtistHolder, position: Int) {
         holder.setHolder(context, arrayArtists[position], position)
+
+        holder.view.setOnClickListener {
+            TracksHelper.instance().startCategory(context,
+                    Category(
+                            arrayArtists[position].id,
+                            1,
+                            arrayArtists[position].artist
+                    ))
+        }
     }
 }

@@ -1,14 +1,18 @@
 package gabyshev.denis.musicplayer.utils
 
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.graphics.*
 import android.net.Uri
+import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.widget.AppCompatDrawableManager
 import android.util.Log
 import android.view.View
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.category.Category
+import gabyshev.denis.musicplayer.category.CategoryActivity
 import gabyshev.denis.musicplayer.utils.data.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -196,6 +200,59 @@ class TracksHelper {
         return arrayPlaylists
     }
 
+    fun scanForCategory(context: Context, categoryId: Int, category: Int): ArrayList<TrackData> {
+        // 0 - albums, 1 - artists, 2 - genres
+        var arrayTrackData: ArrayList<TrackData> = ArrayList<TrackData>()
+
+
+        var uri: Uri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        if(category == 2) {
+            uri = android.provider.MediaStore.Audio.Genres.Members.getContentUri("external", categoryId.toLong())
+        }
+
+        val projection = arrayOf(
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.ALBUM_ID)
+
+        var selection = "${MediaStore.Audio.Media.IS_MUSIC}  != 0"
+        if(category == 0) {
+            selection = "${MediaStore.Audio.Albums.ALBUM_ID} == $categoryId"
+        }
+        if(category == 1) {
+            selection = "${MediaStore.Audio.Media.ARTIST_ID} == $categoryId"
+        }
+
+        val sortOrder = "${MediaStore.Audio.AudioColumns.TITLE} COLLATE LOCALIZED ASC"
+
+        val cursor: Cursor? = context.contentResolver.query(uri, projection, selection, null, sortOrder)
+
+        if (cursor != null) {
+            cursor.moveToFirst()
+            while (!cursor.isAfterLast) {
+                val id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)).toLong()
+                val title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
+                val artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
+                val data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
+                val duration = convertDuration(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)).toLong())
+                val albumId = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)).toInt()
+
+                cursor.moveToNext()
+
+                if (data != null && (data.endsWith(".mp3") || data.endsWith(".MP3"))) {
+                    arrayTrackData.add(TrackData(id, title, artist, data, duration, albumId))
+                }
+            }
+
+            cursor.close()
+        }
+
+        return arrayTrackData
+    }
+
     private fun convertDuration(duration: Long): String {
         var out: String = "00:00"
         var hours: Long = 0
@@ -280,5 +337,20 @@ class TracksHelper {
         if(position % 2 == 0) view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_even)
         else view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_odd)
     }
+
+    fun startCategory(context: Context, category: Category) {
+        val bundle: Bundle = Bundle()
+        bundle.putInt("categoryId", category.cateogryId)
+        bundle.putInt("category", category.category)
+        bundle.putString("title", category.title)
+
+        val intent: Intent = Intent(context, CategoryActivity::class.java)
+        intent.putExtras(bundle)
+
+        context.startActivity(intent)
+    }
+
+
+
 
 }
