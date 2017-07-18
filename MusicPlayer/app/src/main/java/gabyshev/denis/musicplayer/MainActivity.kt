@@ -4,15 +4,10 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import gabyshev.denis.musicplayer.fragments.PlayerViewPagerAdapter
 import gabyshev.denis.musicplayer.fragments.ZoomOutPageTransformer
-import gabyshev.denis.musicplayer.utils.RxBus
-import gabyshev.denis.musicplayer.utils.SelectListener
-import gabyshev.denis.musicplayer.utils.app
-import gabyshev.denis.musicplayer.utils.data.TrackData
+import gabyshev.denis.musicplayer.fragments.select.SelectListener
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), SelectListener {
-
     private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,10 +22,11 @@ class MainActivity : AppCompatActivity(), SelectListener {
     override fun startSelect() {
     }
 
-    override fun addToSelect(tracks: ArrayList<TrackData>) {
+    override fun stopSelect() {
+
     }
 
-    override fun stopSelect(action: Int) {
-    }
+    override fun countSelect(count: String) {
 
+    }
 }

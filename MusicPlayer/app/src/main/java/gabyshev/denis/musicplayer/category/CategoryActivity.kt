@@ -6,21 +6,20 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.fragments.select.SelectFragment
+import gabyshev.denis.musicplayer.fragments.select.SelectListener
 import gabyshev.denis.musicplayer.fragments.tracks.TracksAdapter
 import gabyshev.denis.musicplayer.utils.*
-import gabyshev.denis.musicplayer.utils.data.TrackData
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_category.*
-import org.jetbrains.anko.find
 import javax.inject.Inject
 
 /**
  * Created by 1 on 18.07.2017.
  */
 class CategoryActivity: AppCompatActivity(), SelectListener {
-    private val TAG = "CategoryActivity"
 
-    private var selectedArray: ArrayList<TrackData> = ArrayList<TrackData>()
+    private val TAG = "CategoryActivity"
 
     private var categoryId: Int = -1
     private var category: Int = -1 // 0 - albums, 1 - artists, 2 - genres
@@ -28,6 +27,8 @@ class CategoryActivity: AppCompatActivity(), SelectListener {
 
     @Inject lateinit var rxBus: RxBus
     private var subscriptions = CompositeDisposable()
+
+    private val selectFragment = SelectFragment()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,17 +62,16 @@ class CategoryActivity: AppCompatActivity(), SelectListener {
 
     override fun startSelect() {
         Log.d(TAG, "start select")
-        selectedArray.clear()
+        supportFragmentManager.beginTransaction().replace(R.id.selectFragment, selectFragment).commit()
     }
 
-    override fun addToSelect(tracks: ArrayList<TrackData>) {
-        selectedArray.addAll(tracks)
+    override fun stopSelect() {
+        Log.d(TAG, "stop select")
+        supportFragmentManager.beginTransaction().remove(selectFragment).commit()
     }
 
-    override fun stopSelect(action: Int) {
-        for(item in selectedArray) {
-            Log.d(TAG, "${item.artist} : ${item.title}")
-        }
+    override fun countSelect(count: String) {
+        selectFragment.selectCount(count)
     }
 
     override fun onDestroy() {

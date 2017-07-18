@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.events.MediaPlayerStatusEvent
 import gabyshev.denis.musicplayer.events.TrackPosition
@@ -16,11 +15,10 @@ import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.data.TrackData
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
 import gabyshev.denis.musicplayer.utils.RxBus
-import gabyshev.denis.musicplayer.utils.SelectListener
+import gabyshev.denis.musicplayer.fragments.select.SelectListener
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
-import javax.inject.Inject
 
 /**
  * Created by Borya on 15.07.2017.
@@ -49,6 +47,10 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
         }
 
         holder?.itemView?.setOnLongClickListener(View.OnLongClickListener {
+            if(selectedTracks.size == 0) {
+                selectListener.startSelect()
+            }
+
             checkHolder(holder, position)
             true
         })
@@ -82,6 +84,7 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
         } else {
             TracksHelper.instance().setSelectedBackground(context, holder.itemView, position)
         }
+
     }
 
     private fun isContainsTrack(position: Int): Boolean {
@@ -90,16 +93,17 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
         for(item in selectedTracks) {
             if(trackId == item.id) {
                 selectedTracks.remove(item)
+                if(selectedTracks.size == 0) {
+                    selectListener.stopSelect()
+                }
                 return true
             }
         }
 
+        //selectListener.countSelect(arrayTracks.size.toString())
         selectedTracks.add(arrayTracks[position])
+
 
         return false
     }
-
-
-
-
 }
