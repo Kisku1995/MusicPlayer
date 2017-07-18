@@ -7,15 +7,19 @@ import android.util.Log
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.fragments.tracks.TracksAdapter
+import gabyshev.denis.musicplayer.utils.SelectListener
 import gabyshev.denis.musicplayer.utils.TracksHelper
+import gabyshev.denis.musicplayer.utils.data.TrackData
 import kotlinx.android.synthetic.main.activity_category.*
 import org.jetbrains.anko.find
 
 /**
  * Created by 1 on 18.07.2017.
  */
-class CategoryActivity: AppCompatActivity() {
+class CategoryActivity: AppCompatActivity(), SelectListener {
     private val TAG = "CategoryActivity"
+
+    private var selectedArray: ArrayList<TrackData> = ArrayList<TrackData>()
 
     private var categoryId: Int = -1
     private var category: Int = -1 // 0 - albums, 1 - artists, 2 - genres
@@ -47,4 +51,20 @@ class CategoryActivity: AppCompatActivity() {
             finish()
         }
     }
+
+    override fun startSelect() {
+        Log.d(TAG, "start select")
+        selectedArray.clear()
+    }
+
+    override fun addToSelect(tracks: ArrayList<TrackData>) {
+        selectedArray.addAll(tracks)
+    }
+
+    override fun stopSelect(action: Int) {
+        for(item in selectedArray) {
+            Log.d(TAG, "${item.artist} : ${item.title}")
+        }
+    }
+
 }

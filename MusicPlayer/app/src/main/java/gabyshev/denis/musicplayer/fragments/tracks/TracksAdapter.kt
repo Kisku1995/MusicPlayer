@@ -5,12 +5,15 @@ import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
 import gabyshev.denis.musicplayer.utils.data.TrackData
 import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
+import gabyshev.denis.musicplayer.utils.SelectListener
+import org.jetbrains.anko.sdk25.coroutines.onLongClick
 import java.util.*
 
 /**
@@ -19,6 +22,7 @@ import java.util.*
 
 class TracksAdapter(private val context: Context, private val arrayTracks: ArrayList<TrackData>): RecyclerView.Adapter<TracksHolder>() {
     private val TAG = "TracksAdapter"
+//    var selectListener: SelectListener = context as SelectListener
 
     override fun getItemCount(): Int = arrayTracks.size
 
@@ -45,5 +49,10 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
                 RxMediaPlayerBus.instance()?.setActiveAudioAndPlay(position)
             }
         }
+
+        holder?.itemView?.setOnLongClickListener(View.OnLongClickListener {
+           // selectListener.startSelect()
+            false
+        })
     }
 }
