@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import gabyshev.denis.musicplayer.fragments.albums.AlbumsFragment
 import gabyshev.denis.musicplayer.fragments.artists.ArtistsFragment
+import gabyshev.denis.musicplayer.fragments.genres.GenresFragment
 import gabyshev.denis.musicplayer.fragments.playlists.PlaylistsFragment
 import gabyshev.denis.musicplayer.fragments.tracks.TracksFragment
 
@@ -21,6 +22,8 @@ class PlayerViewPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm
             return AlbumsFragment()
         else if(position == 3) {
             return ArtistsFragment()
+        } else if(position == 4) {
+            return GenresFragment()
         } else
             return PlaylistsFragment()
     }

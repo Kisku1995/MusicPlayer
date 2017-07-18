@@ -1,4 +1,4 @@
-package gabyshev.denis.musicplayer.fragments.playlists
+package gabyshev.denis.musicplayer.fragments.genres
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,20 +12,22 @@ import gabyshev.denis.musicplayer.utils.TracksHelper
 import org.jetbrains.anko.find
 
 /**
- * Created by 1 on 17.07.2017.
+ * Created by 1 on 18.07.2017.
  */
-class PlaylistsFragment: Fragment() {
+class GenresFragment: Fragment() {
     private lateinit var recyclerView: RecyclerView
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = PlaylistsAdapter(context, TracksHelper.instance().scanForPlaylists(context))
+        recyclerView.adapter = GenresAdapter(context, TracksHelper.instance().scanForGenres(context))
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = LayoutInflater.from(context).inflate(R.layout.fragment_recycler_view, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view: View = inflater.inflate(R.layout.fragment_recycler_view, container, false)
+
         recyclerView = view.find(R.id.recyclerView)
+
         return view
     }
 }

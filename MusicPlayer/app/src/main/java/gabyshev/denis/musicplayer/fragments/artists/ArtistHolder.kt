@@ -13,7 +13,7 @@ import org.jetbrains.anko.find
 /**
  * Created by 1 on 18.07.2017.
  */
-class ArtistsHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+class ArtistHolder(private val view: View) : RecyclerView.ViewHolder(view) {
     private val artist: TextView = view.find(R.id.artist)
     private val albumsCount: TextView = view.find(R.id.albumsCount)
     private val tracksCount: TextView = view.find(R.id.tracksCount)

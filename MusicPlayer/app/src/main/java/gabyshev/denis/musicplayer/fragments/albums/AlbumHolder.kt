@@ -18,7 +18,7 @@ import java.io.File
  * Created by Borya on 17.07.2017.
  */
 
-class AlbumsHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+class AlbumHolder(private val view: View) : RecyclerView.ViewHolder(view) {
     private val cover: ImageView = view.find(R.id.cover)
     private val album: TextView = view.find(R.id.album)
     private val artist: TextView = view.find(R.id.artist)

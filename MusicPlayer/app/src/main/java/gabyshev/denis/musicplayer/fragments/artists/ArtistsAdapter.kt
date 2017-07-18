@@ -10,15 +10,15 @@ import gabyshev.denis.musicplayer.utils.data.Artist
 /**
  * Created by 1 on 18.07.2017.
  */
-class ArtistsAdapter(private val context: Context, private val arrayArtists: ArrayList<Artist>): RecyclerView.Adapter<ArtistsHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ArtistsHolder {
-        return ArtistsHolder(LayoutInflater.from(context).inflate(R.layout.fragment_artists_item, parent, false))
+class ArtistsAdapter(private val context: Context, private val arrayArtists: ArrayList<Artist>): RecyclerView.Adapter<ArtistHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ArtistHolder {
+        return ArtistHolder(LayoutInflater.from(context).inflate(R.layout.fragment_artists_item, parent, false))
     }
 
     override fun getItemCount(): Int = arrayArtists.size
 
 
-    override fun onBindViewHolder(holder: ArtistsHolder, position: Int) {
+    override fun onBindViewHolder(holder: ArtistHolder, position: Int) {
         holder.setHolder(context, arrayArtists[position], position)
     }
 }

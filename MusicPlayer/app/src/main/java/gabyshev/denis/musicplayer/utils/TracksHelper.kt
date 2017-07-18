@@ -5,11 +5,13 @@ import android.database.Cursor
 import android.graphics.*
 import android.net.Uri
 import android.provider.MediaStore
+import android.support.v7.widget.AppCompatDrawableManager
 import android.util.Log
-import gabyshev.denis.musicplayer.utils.data.Album
-import gabyshev.denis.musicplayer.utils.data.Artist
-import gabyshev.denis.musicplayer.utils.data.TrackData
+import android.view.View
+import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.utils.data.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Borya on 15.07.2017.
@@ -134,6 +136,66 @@ class TracksHelper {
         return arrayArtists
     }
 
+    fun scanForGenres(context: Context): ArrayList<Genre> {
+        val arrayGenres: ArrayList<Genre> = ArrayList<Genre>()
+
+        val uri: Uri = MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI
+        val projection = arrayOf(
+                MediaStore.Audio.Genres._ID,
+                MediaStore.Audio.Genres.NAME
+        )
+
+        val sortOrder = "${MediaStore.Audio.Genres.NAME} ASC"
+
+        val cursor: Cursor? = context.contentResolver.query(uri, projection, null, null, sortOrder)
+
+        if(cursor != null) {
+            cursor.moveToFirst()
+            while(!cursor.isAfterLast) {
+                val id: Int = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres._ID)).toInt()
+                val name: String = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Genres.NAME))
+
+                cursor.moveToNext()
+
+                arrayGenres.add(Genre(id, name))
+            }
+
+            cursor.close()
+        }
+
+        return arrayGenres
+    }
+
+    fun scanForPlaylists(context: Context): ArrayList<Playlist> {
+        var arrayPlaylists: ArrayList<Playlist> = ArrayList<Playlist>()
+
+        val uri: Uri = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI
+        val projection = arrayOf(
+                MediaStore.Audio.Playlists._ID,
+                MediaStore.Audio.Playlists.NAME
+        )
+
+        val sortOrder = "${MediaStore.Audio.Playlists.NAME} ASC"
+
+        val cursor: Cursor? = context.contentResolver.query(uri, projection, null, null, sortOrder)
+
+        if(cursor != null) {
+            cursor.moveToFirst()
+            while(!cursor.isAfterLast) {
+                val id: Int = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Playlists._ID)).toInt()
+                val name: String = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Playlists.NAME))
+
+                cursor.moveToNext()
+
+                arrayPlaylists.add(Playlist(id, name))
+            }
+
+            cursor.close()
+        }
+
+        return arrayPlaylists
+    }
+
     private fun convertDuration(duration: Long): String {
         var out: String = "00:00"
         var hours: Long = 0
@@ -165,9 +227,6 @@ class TracksHelper {
         }
 
         return out
-
-
-
     }
 
     fun getAlbumImagePath(context: Context, albumId: Int): String? {
@@ -215,6 +274,11 @@ class TracksHelper {
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
         canvas.drawBitmap(bitmap, rect, rect, paint)
         return output
+    }
+
+    fun setBackground(context: Context, view: View, position: Int) {
+        if(position % 2 == 0) view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_even)
+        else view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_odd)
     }
 
 }

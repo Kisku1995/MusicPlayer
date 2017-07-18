@@ -10,14 +10,14 @@ import gabyshev.denis.musicplayer.utils.data.Album
 /**
  * Created by Borya on 17.07.2017.
  */
-class AlbumsAdapter(private val context: Context, private val albumsArray: ArrayList<Album>): RecyclerView.Adapter<AlbumsHolder>() {
+class AlbumsAdapter(private val context: Context, private val albumsArray: ArrayList<Album>): RecyclerView.Adapter<AlbumHolder>() {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): AlbumsHolder {
-        return AlbumsHolder(LayoutInflater.from(context).inflate(R.layout.fragment_albums_item, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): AlbumHolder {
+        return AlbumHolder(LayoutInflater.from(context).inflate(R.layout.fragment_albums_item, parent, false))
     }
 
-    override fun onBindViewHolder(holder: AlbumsHolder, position: Int) {
+    override fun onBindViewHolder(holder: AlbumHolder, position: Int) {
         holder.setHolder(context, albumsArray[position], position)
     }
 
