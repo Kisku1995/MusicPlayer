@@ -2,6 +2,7 @@ package gabyshev.denis.musicplayer.utils
 
 import gabyshev.denis.musicplayer.events.ServiceActivity
 import gabyshev.denis.musicplayer.fragments.player.PlayerFragment
+import gabyshev.denis.musicplayer.utils.data.TrackData
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 

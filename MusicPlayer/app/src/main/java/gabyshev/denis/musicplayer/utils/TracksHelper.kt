@@ -338,6 +338,11 @@ class TracksHelper {
         else view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.track_odd)
     }
 
+    fun setSelectedBackground(context: Context, view: View, position: Int) {
+        if(position % 2 == 0) view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.selected1)
+        else view.background = AppCompatDrawableManager.get().getDrawable(context, R.color.selected2)
+    }
+
     fun startCategory(context: Context, category: Category) {
         val bundle: Bundle = Bundle()
         bundle.putInt("categoryId", category.cateogryId)
