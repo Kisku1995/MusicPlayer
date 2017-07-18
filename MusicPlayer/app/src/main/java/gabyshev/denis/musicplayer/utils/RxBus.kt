@@ -1,5 +1,7 @@
 package gabyshev.denis.musicplayer.utils
 
+import gabyshev.denis.musicplayer.events.ServiceActivity
+import gabyshev.denis.musicplayer.fragments.player.PlayerFragment
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
@@ -9,6 +11,7 @@ import io.reactivex.subjects.PublishSubject
  */
 class RxBus {
     private val bus = PublishSubject.create<Any>()
+    var track: ServiceActivity? = null
 
     fun send(event: Any) {
         bus.onNext(event)

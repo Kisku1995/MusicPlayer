@@ -13,11 +13,12 @@ import android.widget.TextView
 import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.events.MediaPlayerStatusEvent
-import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
-import gabyshev.denis.musicplayer.service.activityplayer.ServiceActivity
+import gabyshev.denis.musicplayer.events.ServiceActivity
+import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
 import gabyshev.denis.musicplayer.utils.RxBus
+import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.find
 import javax.inject.Inject
 
@@ -34,9 +35,9 @@ class PlayerFragment: Fragment() {
     private lateinit var artist: TextView
     private lateinit var playPause: ImageView
 
+    private var subsriptions = CompositeDisposable()
+
     private var isPlaying = false
-
-
 
     companion object {
         private var instance: PlayerFragment? = null
@@ -57,9 +58,8 @@ class PlayerFragment: Fragment() {
         image.setImageBitmap(TracksHelper.instance().getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
         RxListener()
 
-        if(RxServiceActivity.instance()?.track != null) {
-            Log.d(TAG, RxServiceActivity.instance()?.track?.track?.title)
-            setPlayer(RxServiceActivity.instance()?.track!!)
+        if(rxBus.track != null) {
+            setPlayer(rxBus.track!!)
         }
 
     }
@@ -76,16 +76,20 @@ class PlayerFragment: Fragment() {
     fun RxListener() {
         playPause.setOnClickListener {
             if(MediaPlayerService.isRunning(context,  MediaPlayerService::class.java) && isPlaying) {
-                rxBus.send(MediaPlayerStatusEvent(0))
-//                RxServiceActivity.instance()?.setActivityService(0)
+                rxBus.send(MediaPlayerStatusEvent(MediaPlayerStatus.PAUSE.action))
             } else {
-                RxServiceActivity.instance()?.setActivityService(1)
+                rxBus.send(MediaPlayerStatusEvent(MediaPlayerStatus.RESUME.action))
             }
         }
 
-        RxServiceActivity.instance()?.getServiceActivity()?.subscribe({
-            setPlayer(it)
-        })
+        subsriptions.add(
+                rxBus.toObservable()
+                        .subscribe({
+                            if(it is ServiceActivity) {
+                                setPlayer(it)
+                            }
+                        })
+        )
     }
 
     private fun setPlayer(it: ServiceActivity) {
@@ -100,7 +104,7 @@ class PlayerFragment: Fragment() {
         }
 
         when(it.action) {
-            0 -> {
+            MediaPlayerStatus.DESTROY.action -> {
                 title.text = getString(R.string.no_title)
                 artist.text = getString(R.string.no_artist)
                 image.setImageBitmap(TracksHelper.instance().getRoundedShape(TracksHelper.instance().getNoAlbumBitmap()))
@@ -108,12 +112,12 @@ class PlayerFragment: Fragment() {
                 isPlaying = false
                 playPause.isEnabled = false
             }
-            1 -> {
+            MediaPlayerStatus.RESUME.action -> {
                 playPause.setImageDrawable(AppCompatDrawableManager.get().getDrawable(context, R.drawable.pause))
                 isPlaying = true
                 playPause.isEnabled = true
             }
-            2 -> {
+            MediaPlayerStatus.PAUSE.action -> {
                 playPause.setImageDrawable(AppCompatDrawableManager.get().getDrawable(context, R.drawable.play))
                 isPlaying = false
             }
@@ -122,8 +126,7 @@ class PlayerFragment: Fragment() {
     }
 
     override fun onDestroy() {
-        RxServiceActivity.instance()?.getServiceActivity()?.onComplete()
-        RxServiceActivity.instance()?.createServiceActivity()
+        subsriptions.dispose()
         super.onDestroy()
     }
 

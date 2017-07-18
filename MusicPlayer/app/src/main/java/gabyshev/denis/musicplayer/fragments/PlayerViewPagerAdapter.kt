@@ -17,7 +17,7 @@ class PlayerViewPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm
 
     override fun getItem(position: Int): Fragment {
         if(position == 0)
-            return TracksFragment.instance()!!
+            return TracksFragment()
         else if(position == 2)
             return AlbumsFragment()
         else if(position == 3) {

@@ -13,23 +13,28 @@ import android.util.Log
 import android.widget.RemoteViews
 import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
-import gabyshev.denis.musicplayer.service.activityplayer.ServiceActivity
+import gabyshev.denis.musicplayer.events.ServiceActivity
+import gabyshev.denis.musicplayer.events.TrackPosition
+import gabyshev.denis.musicplayer.events.TracksArray
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
+import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.data.TrackData
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Created by Borya on 15.07.2017.
  */
 
-class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionListener {
+class MusicMediaPlayer(private val service: Service, private val rxBus: RxBus): MediaPlayer.OnCompletionListener {
     //private var audioManager: AudioManager = null
     var mediaPlayer: MediaPlayer = MediaPlayer()
     private var playlist: ArrayList<TrackData>? = null
     private var activeAudio: Int = 0
     private var resumePosition: Int = 0
     private var isPlaying = true
+
+    private var subsriptions = CompositeDisposable()
 
     private val TAG = "MusicMediaPlayer"
 
@@ -56,8 +61,8 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         buildNotification(playlist!![activeAudio])
         mediaPlayer.prepare()
         mediaPlayer.start()
-        RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 1))
-        RxServiceActivity.instance()?.track = ServiceActivity(playlist!![activeAudio], 1)
+        rxBus.send(ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.RESUME.action))
+        rxBus.track = ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.RESUME.action)
     }
 
     fun setActiveAudioAndPlay(activeAudioPosition: Int) {
@@ -79,17 +84,32 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
 
     private fun RxListener() {
         Log.d(TAG, "RxListener")
-        RxMediaPlayerBus.instance()?.getPlaylist()?.subscribe({
-            Log.d(TAG, "getPlaylis")
-            @Suppress("UNCHECKED_CAST")
-            setPlaylist(it as? ArrayList<TrackData> ?: ArrayList<TrackData>())
-        })
+//        RxMediaPlayerBus.instance()?.getPlaylist()?.subscribe({
+//            Log.d(TAG, "getPlaylis")
+//            @Suppress("UNCHECKED_CAST")
+//            setPlaylist(it as? ArrayList<TrackData> ?: ArrayList<TrackData>())
+//        })
 
-        RxMediaPlayerBus.instance()?.getActiveAudioAndPlay()?.subscribe({
-            Log.d(TAG, "getActiveAudioAndPlay")
-            setActiveAudioAndPlay(it)
-            Log.d(TAG, "POSITION : ${it}")
-        })
+//        RxMediaPlayerBus.instance()?.getActiveAudioAndPlay()?.subscribe({
+//            Log.d(TAG, "getActiveAudioAndPlay")
+//            setActiveAudioAndPlay(it)
+//            Log.d(TAG, "POSITION : ${it}")
+//        })
+
+        subsriptions.addAll(
+                rxBus.toObservable()
+                        .subscribe({
+                            if(it is TracksArray) {
+                                setPlaylist(it.arrayTracks)
+                            }
+                        }),
+                rxBus.toObservable()
+                        .subscribe({
+                            if(it is TrackPosition) {
+                                setActiveAudioAndPlay(it.position)
+                            }
+                        })
+        )
     }
 
     fun buildNotification(track: TrackData){
@@ -106,18 +126,18 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
             views.setImageViewBitmap(R.id.image, TracksHelper.instance().getNoAlbumBitmap())
         }
 
-        views.setOnClickPendingIntent(R.id.previous, playbackAction(context, 0))
+        views.setOnClickPendingIntent(R.id.previous, playbackAction(context, MediaPlayerStatus.PREVIOUS))
 
         if(isPlaying) {
             views.setImageViewResource(R.id.playPause, R.drawable.pause)
-            views.setOnClickPendingIntent(R.id.playPause, playbackAction(context, 1))
+            views.setOnClickPendingIntent(R.id.playPause, playbackAction(context, MediaPlayerStatus.PAUSE))
         } else {
             views.setImageViewResource(R.id.playPause, R.drawable.play)
-            views.setOnClickPendingIntent(R.id.playPause, playbackAction(context, 2))
+            views.setOnClickPendingIntent(R.id.playPause, playbackAction(context, MediaPlayerStatus.RESUME))
         }
 
-        views.setOnClickPendingIntent(R.id.next, playbackAction(context, 3))
-        views.setOnClickPendingIntent(R.id.close, playbackAction(context, 4))
+        views.setOnClickPendingIntent(R.id.next, playbackAction(context, MediaPlayerStatus.NEXT))
+        views.setOnClickPendingIntent(R.id.close, playbackAction(context, MediaPlayerStatus.DESTROY))
 
         val intent = Intent(context, MainActivity::class.java)
         intent.action = Intent.ACTION_MAIN
@@ -133,10 +153,10 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         service.startForeground(1338, notificationBuilder.build())
     }
 
-    fun playbackAction(context: Context, action: Int): PendingIntent? {
+    fun playbackAction(context: Context, action: MediaPlayerStatus): PendingIntent? {
         val playbackAction = Intent(context, MediaPlayerService::class.java)
-        playbackAction.action = action.toString()
-        return PendingIntent.getService(context, action, playbackAction, 0)
+        playbackAction.action = action.action.toString()
+        return PendingIntent.getService(context, action.action, playbackAction, 0)
     }
 
     fun getCurrentTrack(): TrackData? = playlist?.get(activeAudio)
@@ -158,8 +178,8 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         resumePosition = mediaPlayer.currentPosition
         mediaPlayer.pause()
         buildNotification(playlist!![activeAudio])
-        RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 2))
-        RxServiceActivity.instance()?.track = ServiceActivity(playlist!![activeAudio], 2)
+        rxBus.send(ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.PAUSE.action))
+        rxBus.track = ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.PAUSE.action)
     }
 
     fun resumeTrack() {
@@ -167,16 +187,14 @@ class MusicMediaPlayer(private val service: Service): MediaPlayer.OnCompletionLi
         mediaPlayer.seekTo(resumePosition)
         mediaPlayer.start()
         buildNotification(playlist!![activeAudio])
-        RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 1))
-        RxServiceActivity.instance()?.track = ServiceActivity(playlist!![activeAudio], 1)
+        rxBus.send(ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.RESUME.action))
+        rxBus.track = ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.RESUME.action)
     }
 
     fun onDestroy() {
         mediaPlayer.release()
-        RxServiceActivity.instance()?.track = null
-        RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(playlist!![activeAudio], 0))
-        RxMediaPlayerBus.instance()?.getPlaylist()?.onComplete()
-        RxMediaPlayerBus.instance()?.getActiveAudioAndPlay()?.onComplete()
-        RxMediaPlayerBus.instance()?.createAgain()
+        subsriptions.dispose()
+        rxBus.track = null
+        rxBus.send(ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.DESTROY.action))
     }
 }

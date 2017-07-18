@@ -1,6 +1,5 @@
 package gabyshev.denis.musicplayer.fragments.tracks
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
@@ -8,20 +7,25 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.events.MediaPlayerStatusEvent
+import gabyshev.denis.musicplayer.events.TrackPosition
+import gabyshev.denis.musicplayer.events.TracksArray
 import gabyshev.denis.musicplayer.service.MediaPlayerService
-import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
 import gabyshev.denis.musicplayer.utils.data.TrackData
-import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
+import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
+import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.SelectListener
-import org.jetbrains.anko.sdk25.coroutines.onLongClick
+import io.reactivex.disposables.CompositeDisposable
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by Borya on 15.07.2017.
  */
 
-class TracksAdapter(private val context: Context, private val arrayTracks: ArrayList<TrackData>): RecyclerView.Adapter<TracksHolder>() {
+class TracksAdapter(private val context: Context, private val arrayTracks: ArrayList<TrackData>, private val rxBus: RxBus, private val subscriptions: CompositeDisposable): RecyclerView.Adapter<TracksHolder>() {
     private val TAG = "TracksAdapter"
     var selectListener: SelectListener = context as SelectListener
 
@@ -38,16 +42,20 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
                 Log.d(TAG, "service not running")
 
                 context.startService(Intent(context, MediaPlayerService::class.java))
-                RxServiceActivity.instance()?.getServiceActivity()?.subscribe({
-                        if(it.action == -1) {
-                            RxMediaPlayerBus.instance()?.setPlaylist(arrayTracks)
-                            RxMediaPlayerBus.instance()?.setActiveAudioAndPlay(position)
-                        }
-                })
+
+                subscriptions.add(
+                        rxBus.toObservable()
+                                .subscribe({
+                                    if(it is MediaPlayerStatusEvent && it.action == MediaPlayerStatus.CREATE.action) {
+                                        rxBus.send(TracksArray(arrayTracks))
+                                        rxBus.send(TrackPosition(position))
+                                    }
+                                })
+                )
             } else {
                 Log.d(TAG, "service running")
-                RxMediaPlayerBus.instance()?.setPlaylist(arrayTracks)
-                RxMediaPlayerBus.instance()?.setActiveAudioAndPlay(position)
+                rxBus.send(TracksArray(arrayTracks))
+                rxBus.send(TrackPosition(position))
             }
         }
 
@@ -56,4 +64,6 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
             false
         })
     }
+
+
 }

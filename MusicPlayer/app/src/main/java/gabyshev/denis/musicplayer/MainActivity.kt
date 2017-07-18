@@ -4,9 +4,12 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import gabyshev.denis.musicplayer.fragments.PlayerViewPagerAdapter
 import gabyshev.denis.musicplayer.fragments.ZoomOutPageTransformer
+import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.SelectListener
+import gabyshev.denis.musicplayer.utils.app
 import gabyshev.denis.musicplayer.utils.data.TrackData
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), SelectListener {
 

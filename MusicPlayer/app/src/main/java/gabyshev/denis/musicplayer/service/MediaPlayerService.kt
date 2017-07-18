@@ -4,21 +4,18 @@ import android.app.ActivityManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.media.AudioAttributes
-import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.IBinder
 import android.util.Log
 import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.events.MediaPlayerStatusEvent
-import gabyshev.denis.musicplayer.service.activityplayer.RxServiceActivity
-import gabyshev.denis.musicplayer.service.activityplayer.ServiceActivity
+import gabyshev.denis.musicplayer.events.ServiceActivity
+import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
-import gabyshev.denis.musicplayer.service.mediaplayer.RxMediaPlayerBus
 import gabyshev.denis.musicplayer.utils.RxBus
 import javax.inject.Inject
 import io.reactivex.disposables.CompositeDisposable
-
+import io.reactivex.disposables.Disposable
 
 
 /**
@@ -28,7 +25,7 @@ import io.reactivex.disposables.CompositeDisposable
 class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
     private val TAG = "MediaPlayerService"
 
-    private var musicMediaPlayer: MusicMediaPlayer = MusicMediaPlayer(this)
+    private lateinit var musicMediaPlayer: MusicMediaPlayer
     private var audioManager: AudioManager? = null
 
     private var subsriptions = CompositeDisposable()
@@ -51,9 +48,9 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
         super.onCreate()
 
         (applicationContext as App).component.inject(this)
+        musicMediaPlayer = MusicMediaPlayer(this, rxBus)
         RxListener()
     }
-
 
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -61,9 +58,6 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if(!requestAudioFocus()) stopSelf()
-
-
-
 
         handleIncomingActions(intent)
 
@@ -92,49 +86,43 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
             Log.d(TAG, "action : ${action}")
 
             when(action) {
-                "0" -> {
+                MediaPlayerStatus.PREVIOUS.action.toString() -> {
                     musicMediaPlayer.previousTrack()
                 }
-                "1" -> {
+                MediaPlayerStatus.PAUSE.action.toString() -> {
                     musicMediaPlayer.pauseTrack()
                 }
-                "2" -> {
+                MediaPlayerStatus.RESUME.action.toString() -> {
                     musicMediaPlayer.resumeTrack()
                 }
-                "3" -> {
+                MediaPlayerStatus.NEXT.action.toString() -> {
                     musicMediaPlayer.nextTrack()
                 }
-                "4" -> {
+                MediaPlayerStatus.DESTROY.action.toString() -> {
                     stopSelf()
                 }
             }
 
             if(action == null) {
-                RxServiceActivity.instance()?.setServiceActivity(ServiceActivity(null, -1))
+                rxBus.send(MediaPlayerStatusEvent(MediaPlayerStatus.CREATE.action))
             }
         }
     }
 
     private fun RxListener() {
-        RxServiceActivity.instance()?.getActivityService()?.subscribe({
-            if(it == 0) {
-//                musicMediaPlayer.pauseTrack()
-//                musicMediaPlayer.buildNotification(this, musicMediaPlayer.getCurrentTrack()!!)
-            }
-            if(it == 1){
-                musicMediaPlayer.resumeTrack()
-            }
-        })
+        subsriptions.addAll(
+                getDisposable(MediaPlayerStatus.PAUSE.action),
+                getDisposable(MediaPlayerStatus.RESUME.action)
+        )
+    }
 
-
-        subsriptions.add(
-                rxBus.toObservable()
+    private fun getDisposable(action: Int): Disposable {
+        return rxBus.toObservable()
                 .subscribe( {
-                    if(it is MediaPlayerStatusEvent && it.action == 0) {
-                        handleIncomingActions(getAction(1)) // pause
+                    if(it is MediaPlayerStatusEvent && it.action == action) {
+                        handleIncomingActions(getAction(action)) // pause
                     }
                 })
-        )
     }
 
     private fun getAction(action: Int): Intent {
@@ -146,8 +134,6 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
     override fun onDestroy() {
         removeAudioFocus()
         musicMediaPlayer.onDestroy()
-        RxServiceActivity.instance()?.getActivityService()?.onComplete()
-        RxServiceActivity.instance()?.createActivityService()
         subsriptions.dispose()
         stopForeground(true)
         super.onDestroy()

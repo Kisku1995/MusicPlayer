@@ -7,12 +7,12 @@ import android.util.Log
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.fragments.tracks.TracksAdapter
-import gabyshev.denis.musicplayer.utils.SelectCallback
-import gabyshev.denis.musicplayer.utils.SelectListener
-import gabyshev.denis.musicplayer.utils.TracksHelper
+import gabyshev.denis.musicplayer.utils.*
 import gabyshev.denis.musicplayer.utils.data.TrackData
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_category.*
 import org.jetbrains.anko.find
+import javax.inject.Inject
 
 /**
  * Created by 1 on 18.07.2017.
@@ -26,17 +26,21 @@ class CategoryActivity: AppCompatActivity(), SelectListener {
     private var category: Int = -1 // 0 - albums, 1 - artists, 2 - genres
     private var title: String = ""
 
-    private lateinit var callback: SelectCallback
+    @Inject lateinit var rxBus: RxBus
+    private var subscriptions = CompositeDisposable()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
+        app.component.inject(this)
+
         getBundle()
 
         (findViewById(R.id.title) as TextView).text = title
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = TracksAdapter(this, TracksHelper.instance().scanForCategory(this, categoryId, category))
+        recyclerView.adapter = TracksAdapter(this, TracksHelper.instance().scanForCategory(this, categoryId, category), rxBus, subscriptions)
 
         back.setOnClickListener { finish() }
     }
@@ -68,6 +72,11 @@ class CategoryActivity: AppCompatActivity(), SelectListener {
         for(item in selectedArray) {
             Log.d(TAG, "${item.artist} : ${item.title}")
         }
+    }
+
+    override fun onDestroy() {
+        subscriptions.dispose()
+        super.onDestroy()
     }
 
 }
