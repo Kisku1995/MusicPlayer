@@ -5,4 +5,7 @@
     <string name="tracks">Tracks</string>
     <string name="albums">Albums</string>
     <string name="items_selected">item(s) selected</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="create_playlist">Create Playlist</string>
 </resources>

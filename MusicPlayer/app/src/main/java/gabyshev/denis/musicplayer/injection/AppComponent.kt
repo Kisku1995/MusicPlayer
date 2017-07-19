@@ -8,8 +8,10 @@ import gabyshev.denis.musicplayer.fragments.albums.AlbumsFragment
 import gabyshev.denis.musicplayer.fragments.artists.ArtistsFragment
 import gabyshev.denis.musicplayer.fragments.genres.GenresFragment
 import gabyshev.denis.musicplayer.fragments.player.PlayerFragment
+import gabyshev.denis.musicplayer.fragments.playlists.PlaylistsFragment
 import gabyshev.denis.musicplayer.fragments.select.SelectFragment
 import gabyshev.denis.musicplayer.fragments.tracks.TracksFragment
+import gabyshev.denis.musicplayer.playlists.AddPlaylistDialog
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.data.Artist
 import javax.inject.Singleton
@@ -30,4 +32,6 @@ interface AppComponent {
     fun inject(artistsFragment: ArtistsFragment)
     fun inject(genresFragment: GenresFragment)
     fun inject(mainActivity: MainActivity)
+    fun inject(addPlaylistDialog: AddPlaylistDialog)
+    fun inject(playlistsFragment: PlaylistsFragment)
 }

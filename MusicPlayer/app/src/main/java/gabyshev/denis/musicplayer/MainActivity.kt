@@ -1,7 +1,11 @@
 package gabyshev.denis.musicplayer
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.view.ViewPager
 import gabyshev.denis.musicplayer.events.EnumSelectStatus
 import gabyshev.denis.musicplayer.fragments.PlayerViewPagerAdapter
@@ -30,6 +34,8 @@ class MainActivity : AppCompatActivity(), SelectListener {
         setContentView(R.layout.activity_main)
 
         app.component.inject(this)
+
+        checkPermission()
 
         viewPager.adapter = PlayerViewPagerAdapter(supportFragmentManager)
         viewPager.setPageTransformer(true, ZoomOutPageTransformer())
@@ -68,6 +74,16 @@ class MainActivity : AppCompatActivity(), SelectListener {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
 
+    private fun checkPermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED ||
+                    checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+                    checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+                    checkSelfPermission(android.Manifest.permission.MEDIA_CONTENT_CONTROL) == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MEDIA_CONTENT_CONTROL), 1337)
+            }
+        }
     }
 }
