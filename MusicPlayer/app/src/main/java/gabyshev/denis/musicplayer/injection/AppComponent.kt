@@ -2,6 +2,7 @@ package gabyshev.denis.musicplayer.injection
 
 import dagger.Component
 import gabyshev.denis.musicplayer.App
+import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.category.CategoryActivity
 import gabyshev.denis.musicplayer.fragments.albums.AlbumsFragment
 import gabyshev.denis.musicplayer.fragments.artists.ArtistsFragment
@@ -28,4 +29,5 @@ interface AppComponent {
     fun inject(albumsFragment: AlbumsFragment)
     fun inject(artistsFragment: ArtistsFragment)
     fun inject(genresFragment: GenresFragment)
+    fun inject(mainActivity: MainActivity)
 }
