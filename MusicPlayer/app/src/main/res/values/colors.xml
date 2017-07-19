@@ -9,4 +9,5 @@
     <color name="track_odd">#25252f</color>
     <color name="selected1">#AD1457</color>
     <color name="selected2">#C2185B</color>
+    <color name="on_drag">#7B1FA2</color>
 </resources>

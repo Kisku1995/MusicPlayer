@@ -53,7 +53,7 @@ class PlaylistHelper {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.ALBUM_ID)
         val selection = "${MediaStore.Audio.Media.IS_MUSIC}  != 0"
-        val sortOrder = "${MediaStore.Audio.AudioColumns.TITLE} COLLATE LOCALIZED ASC"
+        val sortOrder = "${MediaStore.Audio.Playlists.Members.PLAY_ORDER} ASC"
 
         val cursor: Cursor? = context.contentResolver.query(uri, projection, selection, null, sortOrder)
 
@@ -125,6 +125,13 @@ class PlaylistHelper {
         val where = MediaStore.Audio.Playlists._ID + "=?"
         val whereVal = arrayOf(playlistId)
         resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, where, whereVal)
+    }
+
+    fun deleteTrackFromPlaylist(context: Context, playlistId: Long, id: Long) {
+        val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId)
+        val where = MediaStore.Audio.Playlists.Members.AUDIO_ID + "=?"
+        val whereval = arrayOf(id.toString())
+        context.contentResolver.delete(uri, where, whereval)
     }
 
 }

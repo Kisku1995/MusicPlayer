@@ -29,14 +29,16 @@ class PlaylistActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playlist)
 
-
-
         getBundle()
+
+        back.setOnClickListener {
+            finish()
+        }
 
         (findViewById(R.id.title) as TextView).text = bundleTitle
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = PlaylistAdapter(this, PlaylistHelper.instance().getPlaylistTracks(this, id))
+        recyclerView.adapter = PlaylistAdapter(this, PlaylistHelper.instance().getPlaylistTracks(this, id), recyclerView, id)
 
         (findViewById(R.id.delete) as ImageView).setOnClickListener {
             val bundle = Bundle()
