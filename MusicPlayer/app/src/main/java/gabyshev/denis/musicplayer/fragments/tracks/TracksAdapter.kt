@@ -8,9 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.events.MediaPlayerStatusEvent
-import gabyshev.denis.musicplayer.events.TrackPosition
-import gabyshev.denis.musicplayer.events.TracksArray
+import gabyshev.denis.musicplayer.events.*
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.data.TrackData
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
@@ -18,6 +16,7 @@ import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.fragments.select.SelectListener
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import java.util.*
 
 /**
@@ -29,6 +28,10 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
     var selectListener: SelectListener = context as SelectListener
 
     var selectedTracks = ArrayList<TrackData>()
+
+    init {
+        RxSelectListener()
+    }
 
     override fun getItemCount(): Int = arrayTracks.size
 
@@ -78,13 +81,30 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
         }
     }
 
+    private fun RxSelectListener() {
+        subscriptions.addAll(
+                rxBus.toObservable()
+                        .subscribe({
+                            if(it is EnumSelectTrackStatus && it == EnumSelectTrackStatus.CANCEL) {
+                                cancelSelecting()
+                            }
+                        }),
+                rxBus.toObservable()
+                        .subscribe({
+                            if(it is EnumSelectTrackStatus && it == EnumSelectTrackStatus.ADD) {
+                                Log.d(TAG, "ADD")
+                            }
+                        })
+        )
+    }
+
     private fun checkHolder(holder: TracksHolder, position: Int) {
         if(isContainsTrack(position)) {
             TracksHelper.instance().setBackground(context, holder.itemView, position)
         } else {
             TracksHelper.instance().setSelectedBackground(context, holder.itemView, position)
         }
-        if(selectedTracks.size >= 2) selectListener.countSelect((selectedTracks.size).toString())
+        if(selectedTracks.size >= 1) selectListener.countSelect((selectedTracks.size).toString())
 
 
     }
@@ -107,5 +127,11 @@ class TracksAdapter(private val context: Context, private val arrayTracks: Array
 
 
         return false
+    }
+
+    private fun cancelSelecting() {
+        selectedTracks.clear()
+        selectListener.stopSelect()
+        notifyDataSetChanged()
     }
 }

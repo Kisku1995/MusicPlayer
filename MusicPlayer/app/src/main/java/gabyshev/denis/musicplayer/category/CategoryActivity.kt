@@ -71,7 +71,11 @@ class CategoryActivity: AppCompatActivity(), SelectListener {
     }
 
     override fun countSelect(count: String) {
-        selectFragment.selectCount(count)
+        try {
+            selectFragment.selectCount(count)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onDestroy() {
