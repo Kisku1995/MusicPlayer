@@ -30,7 +30,7 @@
 
 
 Создание своего плэйлиста под собственный вкус и проигрывание этого плэйлиста
-ы
+
 Изменение порядка трэка       |   Удаление трэка из плэйлиста
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/playlist_reorder.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/playlist_delete.png)
