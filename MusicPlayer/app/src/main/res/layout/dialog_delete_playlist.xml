@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorPrimary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:paddingTop="16dp"
+        android:textCursorDrawable="@null"
+        android:shadowColor="#ffffff"
+        android:textColorLink="#ffffff"
+        android:textColor="#ffffff"
+        android:textColorHighlight="#ffffff"
+        android:id="@+id/playlistName"
+        tools:text="Delete Playlist : American Idiot?"
+        android:background="@null"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:padding="2dp"
+        android:gravity="right"
+        android:layout_below="@id/playlistName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:text="@string/no"
+            android:textColor="#ffffff"
+            android:id="@+id/no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:text="@string/yes"
+            android:textColor="#ffffff"
+            android:id="@+id/yes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>

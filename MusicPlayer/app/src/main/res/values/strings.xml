@@ -11,4 +11,7 @@
     <string name="select_playlist">Select Playlist</string>
     <string name="playlist_updated">Playlist Updated</string>
     <string name="playlist_created">Playlist Created</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="delete_playlist">Remove Playlist</string>
 </resources>

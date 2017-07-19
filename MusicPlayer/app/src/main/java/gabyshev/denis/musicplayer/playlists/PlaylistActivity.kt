@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
 import kotlinx.android.synthetic.main.activity_category.*
@@ -29,6 +30,19 @@ class PlaylistActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = PlaylistAdapter(this, PlaylistHelper.instance().getPlaylistTracks(this, id))
+
+        (findViewById(R.id.delete) as ImageView).setOnClickListener {
+            val bundle = Bundle()
+            bundle.putLong("id", id)
+            bundle.putString("title", bundleTitle)
+
+            val deleteDialog = DeletePlaylistDialog()
+            deleteDialog.arguments = bundle
+            deleteDialog.show(supportFragmentManager, "deletePlaylist")
+
+
+
+        }
     }
 
     fun getBundle() {

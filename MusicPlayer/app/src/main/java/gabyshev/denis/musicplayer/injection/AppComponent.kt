@@ -36,4 +36,5 @@ interface AppComponent {
     fun inject(addPlaylistDialog: AddPlaylistDialog)
     fun inject(playlistsFragment: PlaylistsFragment)
     fun inject(addTracksToPlaylistDialog: AddTracksToPlaylistDialog)
+    fun inject()
 }

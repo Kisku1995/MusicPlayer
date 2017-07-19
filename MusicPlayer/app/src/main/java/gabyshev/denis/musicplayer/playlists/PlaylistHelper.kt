@@ -119,4 +119,12 @@ class PlaylistHelper {
         return count.size
     }
 
+    fun deletePlaylist(context: Context, id: Long) {
+        val playlistId = id.toString()
+        val resolver = context.contentResolver
+        val where = MediaStore.Audio.Playlists._ID + "=?"
+        val whereVal = arrayOf(playlistId)
+        resolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, where, whereVal)
+    }
+
 }
