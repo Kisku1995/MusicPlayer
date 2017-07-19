@@ -1,10 +1,12 @@
 package gabyshev.denis.musicplayer.fragments
 
 import android.content.Context
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.events.EnumSelectStatus
 import gabyshev.denis.musicplayer.fragments.select.SelectListener
+import gabyshev.denis.musicplayer.playlists.add_tracks.AddTracksToPlaylistDialog
 import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import io.reactivex.disposables.CompositeDisposable
@@ -66,7 +68,10 @@ abstract class RecyclerViewSelectAbstract<T, K : RecyclerView.ViewHolder?>(
 
     abstract fun isContainsTrack(position: Int): Boolean
 
-    abstract fun addSelecting()
+    fun addSelecting() {
+        if(selectedObject.size > 0)
+            AddTracksToPlaylistDialog().show((context as AppCompatActivity).supportFragmentManager, "genre")
+    }
 
 
 }

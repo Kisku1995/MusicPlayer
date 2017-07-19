@@ -38,24 +38,23 @@ class GenresAdapter(private val context: Context,
                         .subscribe{
                             if(it is PlaylistID) {
                                 Log.d(TAG, "playlist ID : ${it.id}")
+                                if (selectedObject.size > 0) {
+                                    for (item in selectedObject) {
+                                        val arrayTracks: ArrayList<TrackData> = TracksHelper.instance().scanForCategory(context, item.id, 2)
+                                        for (tracks in arrayTracks) {
+                                            Log.d(TAG, "${tracks.artist} : ${tracks.title}")
+                                        }
 
-                                for(item in selectedObject) {
-                                    val arrayTracks: ArrayList<TrackData> = TracksHelper.instance().scanForCategory(context, item.id, 2)
-                                    for(tracks in arrayTracks) {
-                                        Log.d(TAG, "${tracks.artist} : ${tracks.title}")
+                                        PlaylistHelper.instance().addTracksToPlaylist(it.id, arrayTracks, context)
                                     }
+                                    selectListener.stopSelect()
+                                    selectedObject.clear()
+                                    notifyDataSetChanged()
 
-                                    PlaylistHelper.instance().addTracksToPlaylist(it.id, arrayTracks, context)
                                 }
-                                selectListener.stopSelect()
-                                selectedObject.clear()
-                                notifyDataSetChanged()
-
                             }
                         }
         )
-
-
     }
 
 
@@ -78,9 +77,7 @@ class GenresAdapter(private val context: Context,
         return false
     }
 
-    override fun addSelecting() {
-        AddTracksToPlaylistDialog().show((context as AppCompatActivity).supportFragmentManager, "genre")
-    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): GenreHolder {
         return GenreHolder(LayoutInflater.from(context).inflate(R.layout.fragment_genre_item, parent, false))

@@ -8,6 +8,7 @@ import android.provider.MediaStore
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.data.TrackData
 import android.content.ContentResolver
+import android.widget.Toast
 import gabyshev.denis.musicplayer.R
 import org.jetbrains.anko.toast
 
@@ -36,6 +37,8 @@ class PlaylistHelper {
         values.put(MediaStore.Audio.Playlists.NAME, name)
         val uri = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI
         resolver.insert(uri, values)
+
+        context.toast(context.getString(R.string.playlist_created))
     }
 
     fun getPlaylistTracks(context: Context, id: Long): ArrayList<TrackData> {
@@ -87,10 +90,10 @@ class PlaylistHelper {
         }
         val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", id)
         val resolver = context.contentResolver
-        val num = resolver.bulkInsert(uri, values)
+        resolver.bulkInsert(uri, values)
         resolver.notifyChange(Uri.parse("content://media"), null)
 
-        context.toast("added")
+        context.toast(context.getString(R.string.playlist_updated))
     }
 
     private fun getPlaylistSize(id: Long, context: Context): Int {

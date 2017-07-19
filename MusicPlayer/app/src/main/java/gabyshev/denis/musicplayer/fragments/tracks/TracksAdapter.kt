@@ -2,6 +2,7 @@ package gabyshev.denis.musicplayer.fragments.tracks
 
 import android.content.Context
 import android.content.Intent
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +10,13 @@ import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.events.*
 import gabyshev.denis.musicplayer.fragments.RecyclerViewSelectAbstract
+import gabyshev.denis.musicplayer.playlists.PlaylistHelper
+import gabyshev.denis.musicplayer.playlists.add_tracks.AddTracksToPlaylistDialog
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.data.TrackData
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
 import gabyshev.denis.musicplayer.utils.RxBus
+import gabyshev.denis.musicplayer.utils.TracksHelper
 import io.reactivex.disposables.CompositeDisposable
 
 /**
@@ -21,6 +25,24 @@ import io.reactivex.disposables.CompositeDisposable
 
 class TracksAdapter(private val context: Context, private var arrayTracks: ArrayList<TrackData>, private val rxBus: RxBus, private var subscriptions: CompositeDisposable)
     : RecyclerViewSelectAbstract<TrackData, TracksHolder>(context, arrayTracks, rxBus, subscriptions) {
+
+    init {
+        subscriptions.add(
+                rxBus.toObservable()
+                        .subscribe{
+                            if(it is PlaylistID) {
+                                Log.d(TAG, "playlist ID : ${it.id}")
+                                if (selectedObject.size > 0) {
+                                        PlaylistHelper.instance().addTracksToPlaylist(it.id, selectedObject, context)
+                                    selectListener.stopSelect()
+                                    selectedObject.clear()
+                                    notifyDataSetChanged()
+
+                                }
+                            }
+                        }
+        )
+    }
 
     private val TAG = "TracksAdapter"
 
@@ -68,17 +90,6 @@ class TracksAdapter(private val context: Context, private var arrayTracks: Array
             rxBus.send(TracksArray(arrayTracks))
             rxBus.send(TrackPosition(position))
         }
-    }
-
-    override fun addSelecting() {
-
-//        selectListener.stopSelect()
-//        notifyDataSetChanged()
-//        for(item in selectedObject) {
-//            Log.d(TAG, "${item.artist} : ${item.title}")
-//        }
-//        selectedObject.clear()
-
     }
 
     override fun isContainsTrack(position: Int): Boolean {
