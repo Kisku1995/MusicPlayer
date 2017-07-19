@@ -24,6 +24,10 @@ class SelectFragment: Fragment() {
 
     @Inject lateinit var rxBus: RxBus
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         selectCount.text = "1 ${getString(R.string.items_selected)}"

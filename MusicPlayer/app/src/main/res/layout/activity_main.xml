@@ -17,12 +17,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <fragment
+    <FrameLayout
         android:id="@+id/player"
         android:layout_alignParentBottom="true"
-        android:name="gabyshev.denis.musicplayer.fragments.player.PlayerFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"

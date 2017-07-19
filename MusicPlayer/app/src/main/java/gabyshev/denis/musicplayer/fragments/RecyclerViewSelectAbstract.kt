@@ -13,8 +13,11 @@ import java.util.ArrayList
 /**
  * Created by 1 on 19.07.2017.
  */
-abstract class RecyclerViewSelectAbstract<T, K : RecyclerView.ViewHolder?>(private val context: Context, private val arrayObject: ArrayList<T>, private val rxBus: RxBus, private val subscriptions: CompositeDisposable) :
-        RecyclerView.Adapter<K>() {
+abstract class RecyclerViewSelectAbstract<T, K : RecyclerView.ViewHolder?>(
+                               private val context: Context,
+                               private val arrayObject: ArrayList<T>,
+                               private val rxBus: RxBus,
+                               private val subscriptions: CompositeDisposable) : RecyclerView.Adapter<K>() {
 
     var selectedObject = ArrayList<T>()
     var selectListener: SelectListener = context as SelectListener

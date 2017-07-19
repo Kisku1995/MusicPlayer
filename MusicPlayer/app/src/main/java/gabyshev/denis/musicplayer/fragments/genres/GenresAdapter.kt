@@ -2,34 +2,95 @@ package gabyshev.denis.musicplayer.fragments.genres
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.category.Category
+import gabyshev.denis.musicplayer.fragments.RecyclerViewSelectAbstract
+import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.data.Genre
+import gabyshev.denis.musicplayer.utils.data.TrackData
+import io.reactivex.disposables.CompositeDisposable
+import java.util.ArrayList
 
 /**
  * Created by 1 on 18.07.2017.
  */
-class GenresAdapter(private val context: Context, private val arrayGenres: ArrayList<Genre>): RecyclerView.Adapter<GenreHolder>() {
+class GenresAdapter(private val context: Context,
+                    private val arrayObject: ArrayList<Genre>,
+                    private val rxBus: RxBus,
+                    private val subscriptions: CompositeDisposable) : RecyclerViewSelectAbstract<Genre, GenreHolder>(context, arrayObject, rxBus, subscriptions) {
+
+    private val TAG = "GenreAdapter"
+
+    override fun isContainsTrack(position: Int): Boolean {
+        val trackId: Int = arrayObject[position].id
+
+        for(item in selectedObject) {
+            if(trackId == item.id) {
+                selectedObject.remove(item)
+                if(selectedObject.size == 0) {
+                    selectListener.stopSelect()
+                }
+                return true
+            }
+        }
+
+        selectedObject.add(arrayObject[position])
+
+        return false
+    }
+
+    override fun addSelecting() {
+        for(item in selectedObject) {
+            val arrayTracks: ArrayList<TrackData> = TracksHelper.instance().scanForCategory(context, item.id, 2)
+            for(tracks in arrayTracks) {
+                Log.d(TAG, "${tracks.artist} : ${tracks.title}")
+            }
+        }
+        selectListener.stopSelect()
+        selectedObject.clear()
+        notifyDataSetChanged()
+
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): GenreHolder {
         return GenreHolder(LayoutInflater.from(context).inflate(R.layout.fragment_genre_item, parent, false))
     }
 
-    override fun onBindViewHolder(holder: GenreHolder, position: Int) {
-        holder.setHolder(context, arrayGenres[position], position)
+    override fun onBindViewHolder(holder: GenreHolder?, position: Int) {
+        holder?.setHolder(context, arrayObject[position], position)
 
-        holder.view.setOnClickListener {
-            TracksHelper.instance().startCategory(context,
-                    Category(
-                            arrayGenres[position].id,
-                            2,
-                            arrayGenres[position].name
-                    ))
+
+
+        holder?.itemView?.setOnClickListener {
+            if(selectedObject.size == 0) {
+                TracksHelper.instance().startCategory(context,
+                        Category(
+                                arrayObject[position].id,
+                                2,
+                                arrayObject[position].name
+                        ))
+            }
+            else {
+                checkHolder(holder, position)
+            }
+
         }
+
+        holder?.itemView?.setOnLongClickListener(View.OnLongClickListener {
+            if(selectedObject.size == 0) {
+                selectListener.startSelect()
+            }
+
+            checkHolder(holder, position)
+            true
+        })
     }
 
-    override fun getItemCount(): Int = arrayGenres.size
+    override fun getItemCount(): Int = arrayObject.size
 
 }

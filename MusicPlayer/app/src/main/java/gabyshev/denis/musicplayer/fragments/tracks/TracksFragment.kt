@@ -24,7 +24,7 @@ class TracksFragment : Fragment() {
 
     @Inject lateinit var rxBus: RxBus
     private var subsriptions = CompositeDisposable()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
