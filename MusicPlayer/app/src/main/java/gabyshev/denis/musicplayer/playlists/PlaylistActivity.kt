@@ -6,14 +6,19 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
+import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.utils.RxBus
 import kotlinx.android.synthetic.main.activity_category.*
 import org.jetbrains.anko.find
+import javax.inject.Inject
 
 /**
  * Created by 1 on 19.07.2017.
  */
 class PlaylistActivity : AppCompatActivity() {
+
+
 
     private val TAG = " PlaylistActivity"
 
@@ -23,6 +28,8 @@ class PlaylistActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playlist)
+
+
 
         getBundle()
 

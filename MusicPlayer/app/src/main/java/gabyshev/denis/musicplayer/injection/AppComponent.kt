@@ -12,6 +12,8 @@ import gabyshev.denis.musicplayer.fragments.playlists.PlaylistsFragment
 import gabyshev.denis.musicplayer.fragments.select.SelectFragment
 import gabyshev.denis.musicplayer.fragments.tracks.TracksFragment
 import gabyshev.denis.musicplayer.playlists.AddPlaylistDialog
+import gabyshev.denis.musicplayer.playlists.DeletePlaylistDialog
+import gabyshev.denis.musicplayer.playlists.PlaylistActivity
 import gabyshev.denis.musicplayer.playlists.add_tracks.AddTracksToPlaylistDialog
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.data.Artist
@@ -36,5 +38,5 @@ interface AppComponent {
     fun inject(addPlaylistDialog: AddPlaylistDialog)
     fun inject(playlistsFragment: PlaylistsFragment)
     fun inject(addTracksToPlaylistDialog: AddTracksToPlaylistDialog)
-    fun inject()
+    fun inject(deletePlaylistDialog: DeletePlaylistDialog)
 }

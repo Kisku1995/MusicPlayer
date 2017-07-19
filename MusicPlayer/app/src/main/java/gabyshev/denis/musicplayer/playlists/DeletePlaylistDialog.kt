@@ -8,8 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.events.EnumRVAdapterStatus
+import gabyshev.denis.musicplayer.events.RVAdapterStatus
+import gabyshev.denis.musicplayer.utils.RxBus
 import org.jetbrains.anko.find
+import javax.inject.Inject
 
 /**
  * Created by 1 on 19.07.2017.
@@ -21,11 +26,15 @@ class DeletePlaylistDialog : DialogFragment() {
     private lateinit var no: Button
     private lateinit var playlistName: TextView
 
+    @Inject lateinit var rxBus: RxBus
+
     private var id: Long = -1L
     private var bundleTitle = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        (context.applicationContext as App).component.inject(this)
 
         getBundle()
     }
@@ -39,6 +48,8 @@ class DeletePlaylistDialog : DialogFragment() {
         yes.setOnClickListener {
             PlaylistHelper.instance().deletePlaylist(context, id)
             dismiss()
+            activity.finish()
+            rxBus.send(RVAdapterStatus(EnumRVAdapterStatus.UPDATE))
         }
     }
 
