@@ -9,6 +9,8 @@ import android.widget.TextView
 import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.utils.RxBus
+import gabyshev.denis.musicplayer.utils.app
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_category.*
 import org.jetbrains.anko.find
 import javax.inject.Inject
@@ -18,6 +20,8 @@ import javax.inject.Inject
  */
 class PlaylistActivity : AppCompatActivity() {
 
+    @Inject lateinit var rxBus: RxBus
+    private var subsriptions = CompositeDisposable()
 
 
     private val TAG = " PlaylistActivity"
@@ -29,6 +33,8 @@ class PlaylistActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playlist)
 
+        app.component.inject(this)
+
         getBundle()
 
         back.setOnClickListener {
@@ -38,7 +44,7 @@ class PlaylistActivity : AppCompatActivity() {
         (findViewById(R.id.title) as TextView).text = bundleTitle
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = PlaylistAdapter(this, PlaylistHelper.instance().getPlaylistTracks(this, id), recyclerView, id)
+        recyclerView.adapter = PlaylistAdapter(this, PlaylistHelper.instance().getPlaylistTracks(this, id), recyclerView, id, rxBus, subsriptions)
 
         (findViewById(R.id.delete) as ImageView).setOnClickListener {
             val bundle = Bundle()
@@ -65,5 +71,10 @@ class PlaylistActivity : AppCompatActivity() {
         } else {
             finish()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        subsriptions.dispose()
     }
 }
