@@ -9,10 +9,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.events.EnumSelectTrackStatus
-import gabyshev.denis.musicplayer.events.SelectTrackStatus
+import gabyshev.denis.musicplayer.events.EnumSelectStatus
 import gabyshev.denis.musicplayer.utils.RxBus
-import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.find
 import javax.inject.Inject
 
@@ -33,11 +31,11 @@ class SelectFragment: Fragment() {
         (context.applicationContext as App).component.inject(this)
 
         cancel.setOnClickListener {
-            rxBus.send(EnumSelectTrackStatus.CANCEL)
+            rxBus.send(EnumSelectStatus.CANCEL)
         }
 
         add.setOnClickListener {
-            rxBus.send(EnumSelectTrackStatus.ADD)
+            rxBus.send(EnumSelectStatus.ADD)
         }
     }
 

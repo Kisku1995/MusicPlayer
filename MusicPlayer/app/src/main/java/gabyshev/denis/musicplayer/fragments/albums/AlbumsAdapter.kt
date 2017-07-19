@@ -6,6 +6,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.category.Category
+import gabyshev.denis.musicplayer.fragments.RecyclerViewAbstract
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.data.Album
 
