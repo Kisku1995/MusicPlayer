@@ -9,7 +9,6 @@ import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.fragments.select.SelectFragment
 import gabyshev.denis.musicplayer.fragments.select.SelectListener
 import gabyshev.denis.musicplayer.fragments.tracks.TracksAdapter
-import gabyshev.denis.musicplayer.fragments.tracks.TracksAdapter2
 import gabyshev.denis.musicplayer.utils.*
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_category.*
@@ -29,7 +28,7 @@ class CategoryActivity: AppCompatActivity(), SelectListener {
     @Inject lateinit var rxBus: RxBus
     private var subscriptions = CompositeDisposable()
 
-    private val selectFragment = SelectFragment()
+    private var selectFragment = SelectFragment()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +41,7 @@ class CategoryActivity: AppCompatActivity(), SelectListener {
 
         (findViewById(R.id.title) as TextView).text = title
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = TracksAdapter2(this, TracksHelper.instance().scanForCategory(this, categoryId, category), rxBus, subscriptions)
+        recyclerView.adapter = TracksAdapter(this, TracksHelper.instance().scanForCategory(this, categoryId, category), rxBus, subscriptions)
 
         back.setOnClickListener { finish() }
     }
@@ -62,7 +61,6 @@ class CategoryActivity: AppCompatActivity(), SelectListener {
     }
 
     override fun startSelect() {
-        Log.d(TAG, "start select")
         supportFragmentManager.beginTransaction().replace(R.id.selectFragment, selectFragment).commit()
     }
 

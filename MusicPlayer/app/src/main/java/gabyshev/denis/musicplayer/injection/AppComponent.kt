@@ -2,11 +2,9 @@ package gabyshev.denis.musicplayer.injection
 
 import dagger.Component
 import gabyshev.denis.musicplayer.App
-import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.category.CategoryActivity
 import gabyshev.denis.musicplayer.fragments.player.PlayerFragment
 import gabyshev.denis.musicplayer.fragments.select.SelectFragment
-import gabyshev.denis.musicplayer.fragments.tracks.TracksAdapter
 import gabyshev.denis.musicplayer.fragments.tracks.TracksFragment
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import javax.inject.Singleton

@@ -13,7 +13,7 @@ import java.util.ArrayList
 /**
  * Created by 1 on 19.07.2017.
  */
-abstract class RecyclerViewAbstract<T, K : RecyclerView.ViewHolder?>(private val context: Context, private val arrayObject: ArrayList<T>, private val rxBus: RxBus, private val subscriptions: CompositeDisposable) :
+abstract class RecyclerViewSelectAbstract<T, K : RecyclerView.ViewHolder?>(private val context: Context, private val arrayObject: ArrayList<T>, private val rxBus: RxBus, private val subscriptions: CompositeDisposable) :
         RecyclerView.Adapter<K>() {
 
     var selectedObject = ArrayList<T>()
@@ -34,7 +34,7 @@ abstract class RecyclerViewAbstract<T, K : RecyclerView.ViewHolder?>(private val
                 rxBus.toObservable()
                         .subscribe({
                             if(it is EnumSelectStatus && it == EnumSelectStatus.ADD) {
-
+                                addSelecting()
                             }
                         })
         )
@@ -49,6 +49,12 @@ abstract class RecyclerViewAbstract<T, K : RecyclerView.ViewHolder?>(private val
         if(selectedObject.size >= 1) selectListener.countSelect((selectedObject.size).toString())
     }
 
+    fun cancelSelecting() {
+        selectedObject.clear()
+        selectListener.stopSelect()
+        notifyDataSetChanged()
+    }
+
     abstract override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): K
 
     abstract override fun onBindViewHolder(holder: K?, position: Int)
@@ -57,9 +63,7 @@ abstract class RecyclerViewAbstract<T, K : RecyclerView.ViewHolder?>(private val
 
     abstract fun isContainsTrack(position: Int): Boolean
 
-    fun cancelSelecting() {
-        selectedObject.clear()
-        selectListener.stopSelect()
-        notifyDataSetChanged()
-    }
+    abstract fun addSelecting()
+
+
 }

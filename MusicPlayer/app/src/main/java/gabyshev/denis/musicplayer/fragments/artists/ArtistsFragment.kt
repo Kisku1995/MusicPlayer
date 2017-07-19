@@ -8,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.fragments.albums.AlbumsAdapter
-import gabyshev.denis.musicplayer.fragments.tracks.TracksAdapter
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import org.jetbrains.anko.find
 
