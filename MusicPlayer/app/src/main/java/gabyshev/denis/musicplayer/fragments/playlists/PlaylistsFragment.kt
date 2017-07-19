@@ -49,7 +49,7 @@ class PlaylistsFragment: Fragment() {
         })
 
         fab.setOnClickListener {
-            AddPlaylistDialog().show(fragmentManager, "sdf")
+            AddPlaylistDialog().show(fragmentManager, "addPlaylist")
         }
     }
 

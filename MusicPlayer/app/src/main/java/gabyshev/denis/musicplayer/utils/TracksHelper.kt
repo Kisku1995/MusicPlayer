@@ -255,7 +255,7 @@ class TracksHelper {
         return arrayTrackData
     }
 
-    private fun convertDuration(duration: Long): String {
+    fun convertDuration(duration: Long): String {
         var out: String = "00:00"
         var hours: Long = 0
 
