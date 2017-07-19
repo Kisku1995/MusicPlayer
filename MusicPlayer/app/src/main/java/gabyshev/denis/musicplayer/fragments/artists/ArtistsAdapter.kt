@@ -40,12 +40,12 @@ class ArtistsAdapter(private val context: Context, private val arrayObject: Arra
         return false    }
 
     override fun addSelecting() {
-        selectListener.stopSelect()
-        notifyDataSetChanged()
-        for(item in selectedObject) {
-            Log.d(TAG, "${item.artist} : ${item.trackCount}")
-        }
-        selectedObject.clear()
+//        selectListener.stopSelect()
+//        notifyDataSetChanged()
+//        for(item in selectedObject) {
+//            Log.d(TAG, "${item.artist} : ${item.trackCount}")
+//        }
+//        selectedObject.clear()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ArtistHolder {

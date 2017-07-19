@@ -1,6 +1,9 @@
 package gabyshev.denis.musicplayer.fragments.genres
 
+import android.app.Activity
 import android.content.Context
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,7 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.category.Category
+import gabyshev.denis.musicplayer.events.PlaylistID
 import gabyshev.denis.musicplayer.fragments.RecyclerViewSelectAbstract
+import gabyshev.denis.musicplayer.playlists.PlaylistHelper
+import gabyshev.denis.musicplayer.playlists.add_tracks.AddTracksToPlaylistDialog
 import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.data.Genre
@@ -25,6 +31,34 @@ class GenresAdapter(private val context: Context,
                     private val subscriptions: CompositeDisposable) : RecyclerViewSelectAbstract<Genre, GenreHolder>(context, arrayObject, rxBus, subscriptions) {
 
     private val TAG = "GenreAdapter"
+
+    init {
+        subscriptions.add(
+                rxBus.toObservable()
+                        .subscribe{
+                            if(it is PlaylistID) {
+                                Log.d(TAG, "playlist ID : ${it.id}")
+
+                                for(item in selectedObject) {
+                                    val arrayTracks: ArrayList<TrackData> = TracksHelper.instance().scanForCategory(context, item.id, 2)
+                                    for(tracks in arrayTracks) {
+                                        Log.d(TAG, "${tracks.artist} : ${tracks.title}")
+                                    }
+
+                                    PlaylistHelper.instance().addTracksToPlaylist(it.id, arrayTracks, context)
+                                }
+                                selectListener.stopSelect()
+                                selectedObject.clear()
+                                notifyDataSetChanged()
+
+                            }
+                        }
+        )
+
+
+    }
+
+
 
     override fun isContainsTrack(position: Int): Boolean {
         val trackId: Int = arrayObject[position].id
@@ -45,16 +79,7 @@ class GenresAdapter(private val context: Context,
     }
 
     override fun addSelecting() {
-        for(item in selectedObject) {
-            val arrayTracks: ArrayList<TrackData> = TracksHelper.instance().scanForCategory(context, item.id, 2)
-            for(tracks in arrayTracks) {
-                Log.d(TAG, "${tracks.artist} : ${tracks.title}")
-            }
-        }
-        selectListener.stopSelect()
-        selectedObject.clear()
-        notifyDataSetChanged()
-
+        AddTracksToPlaylistDialog().show((context as AppCompatActivity).supportFragmentManager, "genre")
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): GenreHolder {

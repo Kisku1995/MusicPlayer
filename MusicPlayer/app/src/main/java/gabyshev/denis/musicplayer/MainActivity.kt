@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.view.ViewPager
+import android.util.Log
 import gabyshev.denis.musicplayer.events.EnumSelectStatus
 import gabyshev.denis.musicplayer.fragments.PlayerViewPagerAdapter
 import gabyshev.denis.musicplayer.fragments.ZoomOutPageTransformer
@@ -59,11 +60,13 @@ class MainActivity : AppCompatActivity(), SelectListener {
     }
 
     override fun startSelect() {
+        Log.d(TAG, "Start Select")
        supportFragmentManager.beginTransaction().add(R.id.player, selectFragment).commit()
         isSelect = true
     }
 
     override fun stopSelect() {
+        Log.d(TAG, "Stop Select")
         supportFragmentManager.beginTransaction().remove(selectFragment).commit()
         isSelect = false
     }

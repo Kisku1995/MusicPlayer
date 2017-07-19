@@ -71,12 +71,14 @@ class TracksAdapter(private val context: Context, private var arrayTracks: Array
     }
 
     override fun addSelecting() {
-        selectListener.stopSelect()
-        notifyDataSetChanged()
-        for(item in selectedObject) {
-            Log.d(TAG, "${item.artist} : ${item.title}")
-        }
-        selectedObject.clear()
+
+//        selectListener.stopSelect()
+//        notifyDataSetChanged()
+//        for(item in selectedObject) {
+//            Log.d(TAG, "${item.artist} : ${item.title}")
+//        }
+//        selectedObject.clear()
+
     }
 
     override fun isContainsTrack(position: Int): Boolean {

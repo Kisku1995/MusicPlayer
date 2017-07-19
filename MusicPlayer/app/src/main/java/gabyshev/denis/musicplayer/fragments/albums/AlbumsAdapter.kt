@@ -43,12 +43,12 @@ class AlbumsAdapter(private val context: Context, private val arrayObject: Array
     }
 
     override fun addSelecting() {
-        selectListener.stopSelect()
-        notifyDataSetChanged()
-        for(item in selectedObject) {
-            Log.d(TAG, "${item.artist} : ${item.album}")
-        }
-        selectedObject.clear()
+//        selectListener.stopSelect()
+//        notifyDataSetChanged()
+//        for(item in selectedObject) {
+//            Log.d(TAG, "${item.artist} : ${item.album}")
+//        }
+//        selectedObject.clear()
     }
 
 

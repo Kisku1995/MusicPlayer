@@ -7,5 +7,6 @@ package gabyshev.denis.musicplayer.events
 data class RVAdapterStatus(val action: EnumRVAdapterStatus)
 
 enum class EnumRVAdapterStatus() {
-    UPDATE
+    UPDATE,
+    ADD_TRACKS
 }

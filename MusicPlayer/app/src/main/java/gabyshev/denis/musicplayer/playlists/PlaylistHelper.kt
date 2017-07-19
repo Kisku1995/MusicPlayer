@@ -7,6 +7,11 @@ import android.net.Uri
 import android.provider.MediaStore
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.data.TrackData
+import android.content.ContentResolver
+import gabyshev.denis.musicplayer.R
+import org.jetbrains.anko.toast
+
+
 
 /**
  * Created by 1 on 19.07.2017.
@@ -72,5 +77,43 @@ class PlaylistHelper {
         return arrayTrackData
     }
 
+    fun addTracksToPlaylist(id: Long, tracks: List<TrackData>, context: Context) {
+        val count = getPlaylistSize(id, context)
+        val values = arrayOfNulls<ContentValues>(tracks.size)
+        for (i in tracks.indices) {
+            values[i] = ContentValues()
+            values[i]!!.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, i + count + 1)
+            values[i]!!.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, tracks[i].id)
+        }
+        val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", id)
+        val resolver = context.contentResolver
+        val num = resolver.bulkInsert(uri, values)
+        resolver.notifyChange(Uri.parse("content://media"), null)
+
+        context.toast("added")
+    }
+
+    private fun getPlaylistSize(id: Long, context: Context): Int {
+        val count = java.util.ArrayList<Long>()
+        val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", id)
+
+        val projection = arrayOf(MediaStore.Audio.Playlists.Members._ID)
+        val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
+
+        val cursor: Cursor? = context.getContentResolver().query(uri, projection, selection, null, null)
+
+        if (cursor != null) {
+            cursor.moveToFirst()
+
+            while (!cursor.isAfterLast()) {
+                count.add(java.lang.Long.parseLong(cursor.getString(0)))
+                cursor.moveToNext()
+            }
+
+            cursor.close()
+        }
+
+        return count.size
+    }
 
 }
