@@ -13,6 +13,7 @@ import android.view.View
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.category.Category
 import gabyshev.denis.musicplayer.category.CategoryActivity
+import gabyshev.denis.musicplayer.events.CategoryID
 import gabyshev.denis.musicplayer.utils.data.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -202,13 +203,12 @@ class TracksHelper {
         return arrayPlaylists
     }
 
-    fun scanForCategory(context: Context, categoryId: Int, category: Int): ArrayList<TrackData> {
-        // 0 - albums, 1 - artists, 2 - genres
-        var arrayTrackData: ArrayList<TrackData> = ArrayList<TrackData>()
+    fun scanForCategory(context: Context, categoryId: Int, category: CategoryID): ArrayList<TrackData> {
+        val arrayTrackData: ArrayList<TrackData> = ArrayList<TrackData>()
 
 
         var uri: Uri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        if(category == 2) {
+        if(category == CategoryID.GENRES) {
             uri = android.provider.MediaStore.Audio.Genres.Members.getContentUri("external", categoryId.toLong())
         }
 
@@ -221,10 +221,10 @@ class TracksHelper {
                 MediaStore.Audio.Media.ALBUM_ID)
 
         var selection = "${MediaStore.Audio.Media.IS_MUSIC}  != 0"
-        if(category == 0) {
+        if(category == CategoryID.ALBUMS) {
             selection = "${MediaStore.Audio.Albums.ALBUM_ID} == $categoryId"
         }
-        if(category == 1) {
+        if(category == CategoryID.ARTISTS) {
             selection = "${MediaStore.Audio.Media.ARTIST_ID} == $categoryId"
         }
 

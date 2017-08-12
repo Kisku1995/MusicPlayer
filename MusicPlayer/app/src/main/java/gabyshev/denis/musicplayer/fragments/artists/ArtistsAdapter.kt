@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.category.Category
+import gabyshev.denis.musicplayer.events.CategoryID
 import gabyshev.denis.musicplayer.events.PlaylistID
 import gabyshev.denis.musicplayer.fragments.RecyclerViewSelectAbstract
 import gabyshev.denis.musicplayer.fragments.tracks.TracksHolder
@@ -35,7 +36,7 @@ class ArtistsAdapter(private val context: Context, private val arrayObject: Arra
                                 Log.d(TAG, "playlist ID : ${it.id}")
                                 if (selectedObject.size > 0) {
                                     for (item in selectedObject) {
-                                        val arrayTracks: ArrayList<TrackData> = TracksHelper.instance().scanForCategory(context, item.id, 1)
+                                        val arrayTracks: ArrayList<TrackData> = TracksHelper.instance().scanForCategory(context, item.id, CategoryID.ARTISTS)
                                         for (tracks in arrayTracks) {
                                             Log.d(TAG, "${tracks.artist} : ${tracks.title}")
                                         }
@@ -87,7 +88,7 @@ class ArtistsAdapter(private val context: Context, private val arrayObject: Arra
                 TracksHelper.instance().startCategory(context,
                         Category(
                                 arrayObject[position].id,
-                                1,
+                                CategoryID.ARTISTS.category,
                                 arrayObject[position].artist
                         ))
             }

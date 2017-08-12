@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.events.CategoryID
 import gabyshev.denis.musicplayer.fragments.select.SelectFragment
 import gabyshev.denis.musicplayer.fragments.select.SelectListener
 import gabyshev.denis.musicplayer.fragments.tracks.TracksAdapter
@@ -22,7 +23,7 @@ class CategoryActivity: AppCompatActivity(), SelectListener {
     private val TAG = "CategoryActivity"
 
     private var categoryId: Int = -1
-    private var category: Int = -1 // 0 - albums, 1 - artists, 2 - genres
+    private lateinit var category: CategoryID // 0 - albums, 1 - artists, 2 - genres
     private var title: String = ""
 
     @Inject lateinit var rxBus: RxBus
@@ -51,7 +52,7 @@ class CategoryActivity: AppCompatActivity(), SelectListener {
 
         if(bundle != null) {
             categoryId = bundle.getInt("categoryId")
-            category = bundle.getInt("category")
+            category = CategoryID.values()[bundle.getInt("category")]
             title = bundle.getString("title")
 
             Log.d(TAG, "$categoryId $category $title")
