@@ -40,32 +40,9 @@ class ArtistsAdapter(private val context: Context,
     override fun getItemCount(): Int = arrayObject.size
 
 
-    override fun onBindViewHolder(holder: ArtistHolder?, position: Int) {
-        holder?.setHolder(context, arrayObject[position], position)
+    override fun onBindViewHolder(holder: ArtistHolder, position: Int) {
+        holder.setHolder(context, arrayObject[position], position)
 
-
-        holder?.itemView?.setOnClickListener {
-            if(selectedObject.size == 0) {
-                TracksHelper.instance().startCategory(context,
-                        Category(
-                                arrayObject[position].id,
-                                CategoryID.ARTISTS.category,
-                                arrayObject[position].artist
-                        ))
-            }
-            else {
-                checkHolder(holder, position)
-            }
-
-        }
-
-        holder?.itemView?.setOnLongClickListener(View.OnLongClickListener {
-            if(selectedObject.size == 0) {
-                selectListener.startSelect()
-            }
-
-            checkHolder(holder, position)
-            true
-        })
+        holderAlbumArtistGenre(holder, position, arrayObject[position].artist)
     }
 }

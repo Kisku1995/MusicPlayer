@@ -14,8 +14,7 @@ import android.widget.RemoteViews
 import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.events.ServiceActivity
-import gabyshev.denis.musicplayer.events.TrackPosition
-import gabyshev.denis.musicplayer.events.TracksArray
+import gabyshev.denis.musicplayer.events.TracksArrayPosition
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.RxBus
@@ -84,28 +83,12 @@ class MusicMediaPlayer(private val service: Service, private val rxBus: RxBus): 
 
     private fun RxListener() {
         Log.d(TAG, "RxListener")
-//        RxMediaPlayerBus.instance()?.getPlaylist()?.subscribe({
-//            Log.d(TAG, "getPlaylis")
-//            @Suppress("UNCHECKED_CAST")
-//            setPlaylist(it as? ArrayList<TrackData> ?: ArrayList<TrackData>())
-//        })
-
-//        RxMediaPlayerBus.instance()?.getActiveAudioAndPlay()?.subscribe({
-//            Log.d(TAG, "getActiveAudioAndPlay")
-//            setActiveAudioAndPlay(it)
-//            Log.d(TAG, "POSITION : ${it}")
-//        })
 
         subsriptions.addAll(
                 rxBus.toObservable()
                         .subscribe({
-                            if(it is TracksArray) {
+                            if(it is TracksArrayPosition) {
                                 setPlaylist(it.arrayTracks)
-                            }
-                        }),
-                rxBus.toObservable()
-                        .subscribe({
-                            if(it is TrackPosition) {
                                 setActiveAudioAndPlay(it.position)
                             }
                         })

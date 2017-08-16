@@ -2,14 +2,11 @@ package gabyshev.denis.musicplayer.fragments.tracks
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.events.*
 import gabyshev.denis.musicplayer.fragments.RecyclerViewSelectAbstract
-import gabyshev.denis.musicplayer.playlists.PlaylistHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.TrackData
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
@@ -36,24 +33,10 @@ class TracksAdapter(private val context: Context,
         return TracksHolder(LayoutInflater.from(context).inflate(R.layout.fragment_tracks_item, parent, false))
     }
 
-    override fun onBindViewHolder(holder: TracksHolder?, position: Int) {
-        holder?.bindTracksHolder(context, arrayTracks[position], position)
-        holder?.itemView?.setOnClickListener {
-            if(selectedObject.size == 0) playTrack(position)
-            else {
-                checkHolder(holder, position)
-            }
+    override fun onBindViewHolder(holder: TracksHolder, position: Int) {
+        holder.bindTracksHolder(context, arrayTracks[position], position)
 
-        }
-
-        holder?.itemView?.setOnLongClickListener(View.OnLongClickListener {
-            if(selectedObject.size == 0) {
-                selectListener.startSelect()
-            }
-
-            checkHolder(holder, position)
-            true
-        })
+        holderTracks(holder, position, {playTrack(position)})
     }
 
     private fun playTrack(position: Int) {
@@ -64,14 +47,12 @@ class TracksAdapter(private val context: Context,
                     rxBus.toObservable()
                             .subscribe({
                                 if(it is MediaPlayerStatusEvent && it.action == MediaPlayerStatus.CREATE.action) {
-                                    rxBus.send(TracksArray(arrayTracks))
-                                    rxBus.send(TrackPosition(position))
+                                    rxBus.send(TracksArrayPosition(arrayTracks, position))
                                 }
                             })
             )
         } else {
-            rxBus.send(TracksArray(arrayTracks))
-            rxBus.send(TrackPosition(position))
+            rxBus.send(TracksArrayPosition(arrayTracks, position))
         }
     }
 }

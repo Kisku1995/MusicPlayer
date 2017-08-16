@@ -39,32 +39,10 @@ class AlbumsAdapter(private val context: Context,
         return AlbumHolder(LayoutInflater.from(context).inflate(R.layout.fragment_albums_item, parent, false))
     }
 
-    override fun onBindViewHolder(holder: AlbumHolder?, position: Int) {
-        holder?.setHolder(context, arrayObject[position], position)
+    override fun onBindViewHolder(holder: AlbumHolder, position: Int) {
+        holder.setHolder(context, arrayObject[position], position)
 
-        holder?.itemView?.setOnClickListener {
-            if(selectedObject.size == 0) {
-                TracksHelper.instance().startCategory(context,
-                        Category(
-                                arrayObject[position].id,
-                                CategoryID.ALBUMS.category,
-                                arrayObject[position].album
-                        ))
-            }
-            else {
-                checkHolder(holder, position)
-            }
-
-        }
-
-        holder?.itemView?.setOnLongClickListener(View.OnLongClickListener {
-            if(selectedObject.size == 0) {
-                selectListener.startSelect()
-            }
-
-            checkHolder(holder, position)
-            true
-        })
+       holderAlbumArtistGenre(holder, position, arrayObject[position].album)
     }
 
 }

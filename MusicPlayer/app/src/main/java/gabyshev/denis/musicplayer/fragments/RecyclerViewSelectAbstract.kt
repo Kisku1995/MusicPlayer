@@ -3,7 +3,9 @@ package gabyshev.denis.musicplayer.fragments
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.view.ViewGroup
+import gabyshev.denis.musicplayer.category.Category
 import gabyshev.denis.musicplayer.events.CategoryID
 import gabyshev.denis.musicplayer.events.EnumSelectStatus
 import gabyshev.denis.musicplayer.events.PlaylistID
@@ -34,7 +36,6 @@ abstract class RecyclerViewSelectAbstract<T : Identifier, K : RecyclerView.ViewH
         RxSelectListener()
     }
 
-
     fun subscribe() {
         subscriptions.add(
                 rxBus.toObservable()
@@ -64,7 +65,6 @@ abstract class RecyclerViewSelectAbstract<T : Identifier, K : RecyclerView.ViewH
             notifyDataSetChanged()
         }
     }
-
 
     fun RxSelectListener() {
         subscriptions.addAll(
@@ -100,7 +100,54 @@ abstract class RecyclerViewSelectAbstract<T : Identifier, K : RecyclerView.ViewH
 
     abstract override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): K
 
-    abstract override fun onBindViewHolder(holder: K?, position: Int)
+    abstract override fun onBindViewHolder(holder: K, position: Int)
+
+    fun holderAlbumArtistGenre(holder: K, position: Int, categoryName: String) {
+        holder?.itemView?.setOnClickListener {
+            if(selectedObject.size == 0) {
+                TracksHelper.instance().startCategory(
+                        context,
+                        Category(arrayObject[position].id,
+                                CategoryID.getType(classToken),
+                                categoryName)
+                )
+            } else {
+                checkHolder(holder, position)
+            }
+        }
+
+        itemLongClick(holder, position)
+    }
+
+    fun holderTracks(holder: K, position: Int, operation: (position: Int) -> Unit) {
+        holder?.itemView?.setOnClickListener {
+            if(selectedObject.size == 0) operation(position)
+            else {
+                checkHolder(holder, position)
+            }
+
+        }
+
+        holder?.itemView?.setOnLongClickListener{
+            if(selectedObject.size == 0) {
+                selectListener.startSelect()
+            }
+
+            checkHolder(holder, position)
+            true
+        }
+    }
+
+    fun itemLongClick(holder: K, position: Int) {
+        holder?.itemView?.setOnLongClickListener {
+            if(selectedObject.size == 0) {
+                selectListener.startSelect()
+            }
+
+            checkHolder(holder, position)
+            true
+        }
+    }
 
     override fun getItemCount(): Int = arrayObject.size
 

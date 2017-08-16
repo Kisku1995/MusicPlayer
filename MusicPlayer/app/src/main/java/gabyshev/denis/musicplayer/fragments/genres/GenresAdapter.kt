@@ -36,34 +36,10 @@ class GenresAdapter(private val context: Context,
         return GenreHolder(LayoutInflater.from(context).inflate(R.layout.fragment_genre_item, parent, false))
     }
 
-    override fun onBindViewHolder(holder: GenreHolder?, position: Int) {
-        holder?.setHolder(context, arrayObject[position], position)
+    override fun onBindViewHolder(holder: GenreHolder, position: Int) {
+        holder.setHolder(context, arrayObject[position], position)
 
-
-
-        holder?.itemView?.setOnClickListener {
-            if(selectedObject.size == 0) {
-                TracksHelper.instance().startCategory(context,
-                        Category(
-                                arrayObject[position].id,
-                                CategoryID.GENRES.category,
-                                arrayObject[position].name
-                        ))
-            }
-            else {
-                checkHolder(holder, position)
-            }
-
-        }
-
-        holder?.itemView?.setOnLongClickListener(View.OnLongClickListener {
-            if(selectedObject.size == 0) {
-                selectListener.startSelect()
-            }
-
-            checkHolder(holder, position)
-            true
-        })
+        holderAlbumArtistGenre(holder, position, arrayObject[position].name)
     }
 
     override fun getItemCount(): Int = arrayObject.size

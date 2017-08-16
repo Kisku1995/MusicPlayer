@@ -6,4 +6,4 @@ import gabyshev.denis.musicplayer.utils.TrackData
  * Created by Borya on 18.07.2017.
  */
 
-data class TracksArray(val arrayTracks: ArrayList<TrackData>)
+data class TracksArrayPosition(val arrayTracks: ArrayList<TrackData>, val position: Int)

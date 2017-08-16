@@ -14,8 +14,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import gabyshev.denis.musicplayer.events.MediaPlayerStatusEvent
-import gabyshev.denis.musicplayer.events.TrackPosition
-import gabyshev.denis.musicplayer.events.TracksArray
+import gabyshev.denis.musicplayer.events.TracksArrayPosition
 import gabyshev.denis.musicplayer.playlists.interfaces.ItemTouchHelperAdapter
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
@@ -104,15 +103,13 @@ class PlaylistAdapter(private val context: Context,
                     rxBus.toObservable()
                             .subscribe({
                                 if(it is MediaPlayerStatusEvent && it.action == MediaPlayerStatus.CREATE.action) {
-                                    rxBus.send(TracksArray(arrayTracks))
-                                    rxBus.send(TrackPosition(position))
+                                    rxBus.send(TracksArrayPosition(arrayTracks, position))
                                 }
                             })
             )
         } else {
             Log.d(TAG, "service running")
-            rxBus.send(TracksArray(arrayTracks))
-            rxBus.send(TrackPosition(position))
+            rxBus.send(TracksArrayPosition(arrayTracks, position))
         }
     }
 
