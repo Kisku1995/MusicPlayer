@@ -21,6 +21,8 @@ import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatusEvent
 import gabyshev.denis.musicplayer.utils.RxBus
 import io.reactivex.disposables.CompositeDisposable
+import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.doAsync
 import java.util.*
 
 
@@ -34,7 +36,6 @@ class PlaylistAdapter(private val context: Context,
                       val rxBus: RxBus,
                       val subscriptions: CompositeDisposable
 ): RecyclerView.Adapter<PlaylistHolder>(), ItemTouchHelperAdapter, OnStartDragListener {
-
     private val TAG = "PlaylistAdapter"
 
     private var itemTouchHelper: ItemTouchHelper
@@ -48,7 +49,7 @@ class PlaylistAdapter(private val context: Context,
 
     override fun onItemMove(oldPos: Int, newPos: Int): Boolean {
         moveItem(oldPos, newPos)
-        return false
+        return true
     }
 
     override fun onItemSwipe(pos: Int) {
@@ -89,8 +90,10 @@ class PlaylistAdapter(private val context: Context,
     }
 
     private fun moveItem(oldPos: Int, newPos: Int) {
-        Collections.swap(arrayTracks, oldPos, newPos)
-        MediaStore.Audio.Playlists.Members.moveItem(context.contentResolver, playlistId, oldPos, newPos);
+        doAsync {
+            Collections.swap(arrayTracks, oldPos, newPos)
+            MediaStore.Audio.Playlists.Members.moveItem(context.contentResolver, playlistId, oldPos, newPos);
+        }
         notifyItemMoved(oldPos, newPos)
     }
 

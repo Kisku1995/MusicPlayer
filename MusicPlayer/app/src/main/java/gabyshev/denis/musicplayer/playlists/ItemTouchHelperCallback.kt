@@ -19,20 +19,14 @@ class ItemTouchHelperCallback(var mAdapter: PlaylistAdapter) : ItemTouchHelper.C
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-        //moveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-        if (viewHolder.itemViewType != target.itemViewType) {
-            return false
-        }
-
         mAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
         return true
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        //deleteItem(viewHolder.getAdapterPosition());
         mAdapter.onItemSwipe(viewHolder.adapterPosition)
-
     }
+
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
