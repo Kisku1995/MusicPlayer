@@ -8,9 +8,8 @@ import android.media.AudioManager
 import android.os.IBinder
 import android.util.Log
 import gabyshev.denis.musicplayer.App
-import gabyshev.denis.musicplayer.events.MediaPlayerStatusEvent
-import gabyshev.denis.musicplayer.events.ServiceActivity
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
+import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatusEvent
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
 import gabyshev.denis.musicplayer.utils.RxBus
 import javax.inject.Inject

@@ -119,9 +119,9 @@ abstract class RecyclerViewSelectAbstract<T : Identifier, K : RecyclerView.ViewH
         itemLongClick(holder, position)
     }
 
-    fun holderTracks(holder: K, position: Int, operation: (position: Int) -> Unit) {
+    fun holderTracks(holder: K, position: Int, operation: () -> Unit) {
         holder?.itemView?.setOnClickListener {
-            if(selectedObject.size == 0) operation(position)
+            if(selectedObject.size == 0) operation()
             else {
                 checkHolder(holder, position)
             }

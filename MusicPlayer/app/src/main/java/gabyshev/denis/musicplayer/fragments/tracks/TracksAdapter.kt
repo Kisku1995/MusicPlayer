@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.events.*
+import gabyshev.denis.musicplayer.fragments.PlayTrack
 import gabyshev.denis.musicplayer.fragments.RecyclerViewSelectAbstract
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.TrackData
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
+import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatusEvent
 import gabyshev.denis.musicplayer.utils.RxBus
 import io.reactivex.disposables.CompositeDisposable
 
@@ -20,7 +22,7 @@ import io.reactivex.disposables.CompositeDisposable
 class TracksAdapter(private val context: Context,
                     private var arrayTracks: ArrayList<TrackData>,
                     private val rxBus: RxBus,
-                    private var subscriptions: CompositeDisposable)
+                    private val subscriptions: CompositeDisposable)
     : RecyclerViewSelectAbstract<TrackData, TracksHolder>(context, arrayTracks, rxBus, subscriptions) {
 
     override val classToken = TrackData::class.java
@@ -36,23 +38,6 @@ class TracksAdapter(private val context: Context,
     override fun onBindViewHolder(holder: TracksHolder, position: Int) {
         holder.bindTracksHolder(context, arrayTracks[position], position)
 
-        holderTracks(holder, position, {playTrack(position)})
-    }
-
-    private fun playTrack(position: Int) {
-        if(!MediaPlayerService.isRunning(context, MediaPlayerService::class.java)) {
-            context.startService(Intent(context, MediaPlayerService::class.java))
-
-            subscriptions.add(
-                    rxBus.toObservable()
-                            .subscribe({
-                                if(it is MediaPlayerStatusEvent && it.action == MediaPlayerStatus.CREATE.action) {
-                                    rxBus.send(TracksArrayPosition(arrayTracks, position))
-                                }
-                            })
-            )
-        } else {
-            rxBus.send(TracksArrayPosition(arrayTracks, position))
-        }
+        holderTracks(holder, position, {PlayTrack.playTrack(context, arrayTracks, rxBus, subscriptions, position)})
     }
 }

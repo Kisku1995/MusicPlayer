@@ -13,11 +13,12 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import gabyshev.denis.musicplayer.events.MediaPlayerStatusEvent
 import gabyshev.denis.musicplayer.events.TracksArrayPosition
+import gabyshev.denis.musicplayer.fragments.PlayTrack
 import gabyshev.denis.musicplayer.playlists.interfaces.ItemTouchHelperAdapter
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
+import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatusEvent
 import gabyshev.denis.musicplayer.utils.RxBus
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
@@ -72,7 +73,7 @@ class PlaylistAdapter(private val context: Context,
         holder.setHolder(arrayTracks[position])
 
         holder.view.setOnClickListener {
-            playTrack(position)
+            PlayTrack.playTrack(context, arrayTracks, rxBus, subscriptions, position)
         }
 
         holder.reorder.setOnTouchListener(View.OnTouchListener { v, event ->
@@ -93,25 +94,6 @@ class PlaylistAdapter(private val context: Context,
         notifyItemMoved(oldPos, newPos)
     }
 
-    private fun playTrack(position: Int) {
-        if(!MediaPlayerService.isRunning(context, MediaPlayerService::class.java)) {
-            Log.d(TAG, "service not running")
-
-            context.startService(Intent(context, MediaPlayerService::class.java))
-
-            subscriptions.add(
-                    rxBus.toObservable()
-                            .subscribe({
-                                if(it is MediaPlayerStatusEvent && it.action == MediaPlayerStatus.CREATE.action) {
-                                    rxBus.send(TracksArrayPosition(arrayTracks, position))
-                                }
-                            })
-            )
-        } else {
-            Log.d(TAG, "service running")
-            rxBus.send(TracksArrayPosition(arrayTracks, position))
-        }
-    }
 
 
 

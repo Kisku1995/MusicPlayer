@@ -5,7 +5,6 @@ import android.graphics.*
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.AppCompatDrawableManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +12,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.events.MediaPlayerStatusEvent
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.events.ServiceActivity
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
+import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatusEvent
 import gabyshev.denis.musicplayer.utils.RxBus
 import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.find
