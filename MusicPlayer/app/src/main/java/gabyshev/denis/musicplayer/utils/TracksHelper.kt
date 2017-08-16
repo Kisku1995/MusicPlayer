@@ -14,7 +14,6 @@ import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.category.Category
 import gabyshev.denis.musicplayer.category.CategoryActivity
 import gabyshev.denis.musicplayer.events.CategoryID
-import gabyshev.denis.musicplayer.utils.data.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -54,7 +53,7 @@ class TracksHelper {
         if (cursor != null) {
             cursor.moveToFirst()
             while (!cursor.isAfterLast) {
-                val id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)).toLong()
+                val id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)).toInt()
                 val title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
                 val artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
                 val data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
@@ -235,7 +234,7 @@ class TracksHelper {
         if (cursor != null) {
             cursor.moveToFirst()
             while (!cursor.isAfterLast) {
-                val id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)).toLong()
+                val id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)).toInt()
                 val title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
                 val artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
                 val data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))

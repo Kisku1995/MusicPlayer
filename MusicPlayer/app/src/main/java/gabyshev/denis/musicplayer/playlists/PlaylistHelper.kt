@@ -6,9 +6,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import gabyshev.denis.musicplayer.utils.TracksHelper
-import gabyshev.denis.musicplayer.utils.data.TrackData
-import android.content.ContentResolver
-import android.widget.Toast
+import gabyshev.denis.musicplayer.utils.TrackData
 import gabyshev.denis.musicplayer.R
 import org.jetbrains.anko.toast
 
@@ -60,7 +58,7 @@ class PlaylistHelper {
         if (cursor != null) {
             cursor.moveToFirst()
             while (!cursor.isAfterLast) {
-                val id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)).toLong()
+                val id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID)).toInt()
                 val title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
                 val artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
                 val data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
@@ -80,7 +78,7 @@ class PlaylistHelper {
         return arrayTrackData
     }
 
-    fun addTracksToPlaylist(id: Long, tracks: List<TrackData>, context: Context) {
+    fun addTracksToPlaylist(id: Long, tracks: ArrayList<TrackData>, context: Context) {
         val count = getPlaylistSize(id, context)
         val values = arrayOfNulls<ContentValues>(tracks.size)
         for (i in tracks.indices) {

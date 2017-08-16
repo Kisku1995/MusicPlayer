@@ -4,22 +4,28 @@ import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import gabyshev.denis.musicplayer.events.CategoryID
 import gabyshev.denis.musicplayer.events.EnumSelectStatus
+import gabyshev.denis.musicplayer.events.PlaylistID
 import gabyshev.denis.musicplayer.fragments.select.SelectListener
+import gabyshev.denis.musicplayer.playlists.PlaylistHelper
 import gabyshev.denis.musicplayer.playlists.add_tracks.AddTracksToPlaylistDialog
-import gabyshev.denis.musicplayer.utils.RxBus
-import gabyshev.denis.musicplayer.utils.TracksHelper
+import gabyshev.denis.musicplayer.utils.*
 import io.reactivex.disposables.CompositeDisposable
-import java.util.ArrayList
+
 
 /**
  * Created by 1 on 19.07.2017.
  */
-abstract class RecyclerViewSelectAbstract<T, K : RecyclerView.ViewHolder?>(
+abstract class RecyclerViewSelectAbstract<T : Identifier, K : RecyclerView.ViewHolder?>(
                                private val context: Context,
                                private val arrayObject: ArrayList<T>,
                                private val rxBus: RxBus,
                                private val subscriptions: CompositeDisposable) : RecyclerView.Adapter<K>() {
+
+    private val TAG = "abstract"
+
+    protected abstract val classToken: Class<T>
 
     var selectedObject = ArrayList<T>()
     var selectListener: SelectListener = context as SelectListener
@@ -27,6 +33,38 @@ abstract class RecyclerViewSelectAbstract<T, K : RecyclerView.ViewHolder?>(
     init {
         RxSelectListener()
     }
+
+
+    fun subscribe() {
+        subscriptions.add(
+                rxBus.toObservable()
+                        .subscribe {
+                            if(it is PlaylistID) {
+                                addCategoryTracksToPlaylist(it.id)
+                            }
+                        }
+        )
+    }
+
+    fun addCategoryTracksToPlaylist(id: Long) {
+        if(selectedObject.size > 0) {
+            when(classToken) {
+                TrackData::class.java ->  {
+                    PlaylistHelper.instance().addTracksToPlaylist(id, selectedObject as ArrayList<TrackData>, context)
+                }
+                else -> {
+                    selectedObject
+                            .map { TracksHelper.instance().scanForCategory(context, it.id, CategoryID.values()[CategoryID.getType(classToken)]) }
+                            .forEach { PlaylistHelper.instance().addTracksToPlaylist(id, it, context) }
+                }
+            }
+
+            selectListener.stopSelect()
+            selectedObject.clear()
+            notifyDataSetChanged()
+        }
+    }
+
 
     fun RxSelectListener() {
         subscriptions.addAll(
@@ -46,7 +84,7 @@ abstract class RecyclerViewSelectAbstract<T, K : RecyclerView.ViewHolder?>(
     }
 
     fun checkHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(isContainsTrack(position)) {
+        if(isContainsItem(position)) {
             TracksHelper.instance().setBackground(context, holder.itemView, position)
         } else {
             TracksHelper.instance().setSelectedBackground(context, holder.itemView, position)
@@ -66,12 +104,28 @@ abstract class RecyclerViewSelectAbstract<T, K : RecyclerView.ViewHolder?>(
 
     override fun getItemCount(): Int = arrayObject.size
 
-    abstract fun isContainsTrack(position: Int): Boolean
+    fun isContainsItem(position: Int): Boolean {
+        val trackId: Int = arrayObject[position].id
+
+        for(item in selectedObject) {
+            if(trackId == item.id) {
+                selectedObject.remove(item)
+                if(selectedObject.size == 0) {
+                    selectListener.stopSelect()
+                }
+                return true
+            }
+        }
+
+        selectedObject.add(arrayObject[position])
+
+        return false
+    }
 
     fun addSelecting() {
         if(selectedObject.size > 0)
             AddTracksToPlaylistDialog().show((context as AppCompatActivity).supportFragmentManager, "genre")
     }
-
-
 }
+
+

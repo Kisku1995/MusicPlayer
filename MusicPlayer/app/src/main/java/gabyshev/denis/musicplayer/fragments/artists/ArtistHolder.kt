@@ -1,14 +1,12 @@
 package gabyshev.denis.musicplayer.fragments.artists
 
 import android.content.Context
-import android.support.v7.widget.AppCompatDrawableManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.utils.TracksHelper
-import gabyshev.denis.musicplayer.utils.data.Artist
-import kotlinx.android.synthetic.main.fragment_albums_item.*
+import gabyshev.denis.musicplayer.utils.Artist
 import org.jetbrains.anko.find
 
 /**

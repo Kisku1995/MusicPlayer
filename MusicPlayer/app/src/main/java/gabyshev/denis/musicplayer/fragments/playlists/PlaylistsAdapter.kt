@@ -8,13 +8,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.category.CategoryActivity
 import gabyshev.denis.musicplayer.events.EnumRVAdapterStatus
 import gabyshev.denis.musicplayer.events.RVAdapterStatus
 import gabyshev.denis.musicplayer.playlists.PlaylistActivity
 import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.TracksHelper
-import gabyshev.denis.musicplayer.utils.data.Playlist
+import gabyshev.denis.musicplayer.utils.Playlist
 import io.reactivex.disposables.CompositeDisposable
 
 /**

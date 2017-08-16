@@ -3,13 +3,12 @@ package gabyshev.denis.musicplayer.playlists
 import android.content.Context
 import android.content.Intent
 import android.provider.MediaStore
-import android.support.v4.view.MotionEventCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.playlists.interfaces.OnStartDragListener
-import gabyshev.denis.musicplayer.utils.data.TrackData
+import gabyshev.denis.musicplayer.utils.TrackData
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.MotionEvent
@@ -23,7 +22,6 @@ import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
 import gabyshev.denis.musicplayer.utils.RxBus
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
-import javax.inject.Inject
 
 
 /**

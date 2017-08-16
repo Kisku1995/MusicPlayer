@@ -19,7 +19,7 @@ import gabyshev.denis.musicplayer.events.TracksArray
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.RxBus
-import gabyshev.denis.musicplayer.utils.data.TrackData
+import gabyshev.denis.musicplayer.utils.TrackData
 import io.reactivex.disposables.CompositeDisposable
 
 /**

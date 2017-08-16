@@ -16,7 +16,6 @@ import gabyshev.denis.musicplayer.playlists.DeletePlaylistDialog
 import gabyshev.denis.musicplayer.playlists.PlaylistActivity
 import gabyshev.denis.musicplayer.playlists.add_tracks.AddTracksToPlaylistDialog
 import gabyshev.denis.musicplayer.service.MediaPlayerService
-import gabyshev.denis.musicplayer.utils.data.Artist
 import javax.inject.Singleton
 
 /**

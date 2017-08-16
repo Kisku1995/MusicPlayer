@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.utils.TracksHelper
-import gabyshev.denis.musicplayer.utils.data.Playlist
+import gabyshev.denis.musicplayer.utils.Playlist
 import org.jetbrains.anko.find
 
 /**

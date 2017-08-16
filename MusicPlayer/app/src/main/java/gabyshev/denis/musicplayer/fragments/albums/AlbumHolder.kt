@@ -2,14 +2,13 @@ package gabyshev.denis.musicplayer.fragments.albums
 
 import android.content.Context
 import android.net.Uri
-import android.support.v7.widget.AppCompatDrawableManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.utils.data.Album
+import gabyshev.denis.musicplayer.utils.Album
 import gabyshev.denis.musicplayer.utils.CircleTransform
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import org.jetbrains.anko.find

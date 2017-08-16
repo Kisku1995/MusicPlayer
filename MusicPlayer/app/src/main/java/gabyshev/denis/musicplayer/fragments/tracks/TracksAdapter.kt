@@ -2,7 +2,6 @@ package gabyshev.denis.musicplayer.fragments.tracks
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,40 +10,27 @@ import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.events.*
 import gabyshev.denis.musicplayer.fragments.RecyclerViewSelectAbstract
 import gabyshev.denis.musicplayer.playlists.PlaylistHelper
-import gabyshev.denis.musicplayer.playlists.add_tracks.AddTracksToPlaylistDialog
 import gabyshev.denis.musicplayer.service.MediaPlayerService
-import gabyshev.denis.musicplayer.utils.data.TrackData
+import gabyshev.denis.musicplayer.utils.TrackData
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
 import gabyshev.denis.musicplayer.utils.RxBus
-import gabyshev.denis.musicplayer.utils.TracksHelper
 import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Created by Borya on 15.07.2017.
  */
 
-class TracksAdapter(private val context: Context, private var arrayTracks: ArrayList<TrackData>, private val rxBus: RxBus, private var subscriptions: CompositeDisposable)
+class TracksAdapter(private val context: Context,
+                    private var arrayTracks: ArrayList<TrackData>,
+                    private val rxBus: RxBus,
+                    private var subscriptions: CompositeDisposable)
     : RecyclerViewSelectAbstract<TrackData, TracksHolder>(context, arrayTracks, rxBus, subscriptions) {
 
+    override val classToken = TrackData::class.java
+
     init {
-        subscriptions.add(
-                rxBus.toObservable()
-                        .subscribe{
-                            if(it is PlaylistID) {
-                                Log.d(TAG, "playlist ID : ${it.id}")
-                                if (selectedObject.size > 0) {
-                                        PlaylistHelper.instance().addTracksToPlaylist(it.id, selectedObject, context)
-                                    selectListener.stopSelect()
-                                    selectedObject.clear()
-                                    notifyDataSetChanged()
-
-                                }
-                            }
-                        }
-        )
+       subscribe()
     }
-
-    private val TAG = "TracksAdapter"
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): TracksHolder {
         return TracksHolder(LayoutInflater.from(context).inflate(R.layout.fragment_tracks_item, parent, false))
@@ -72,8 +58,6 @@ class TracksAdapter(private val context: Context, private var arrayTracks: Array
 
     private fun playTrack(position: Int) {
         if(!MediaPlayerService.isRunning(context, MediaPlayerService::class.java)) {
-            Log.d(TAG, "service not running")
-
             context.startService(Intent(context, MediaPlayerService::class.java))
 
             subscriptions.add(
@@ -86,27 +70,8 @@ class TracksAdapter(private val context: Context, private var arrayTracks: Array
                             })
             )
         } else {
-            Log.d(TAG, "service running")
             rxBus.send(TracksArray(arrayTracks))
             rxBus.send(TrackPosition(position))
         }
-    }
-
-    override fun isContainsTrack(position: Int): Boolean {
-        val trackId: Long = arrayTracks[position].id
-
-        for(item in selectedObject) {
-            if(trackId == item.id) {
-                selectedObject.remove(item)
-                if(selectedObject.size == 0) {
-                    selectListener.stopSelect()
-                }
-                return true
-            }
-        }
-
-        selectedObject.add(arrayTracks[position])
-
-        return false
     }
 }

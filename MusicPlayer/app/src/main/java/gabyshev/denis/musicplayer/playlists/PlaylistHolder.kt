@@ -8,9 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.playlists.interfaces.ItemTouchHelperViewHolder
-import gabyshev.denis.musicplayer.utils.data.TrackData
-import kotlinx.android.synthetic.main.activity_category.view.*
-import org.jetbrains.anko.backgroundColor
+import gabyshev.denis.musicplayer.utils.TrackData
 import org.jetbrains.anko.find
 
 /**

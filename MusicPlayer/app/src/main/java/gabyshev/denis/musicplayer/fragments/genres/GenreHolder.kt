@@ -1,13 +1,12 @@
 package gabyshev.denis.musicplayer.fragments.genres
 
 import android.content.Context
-import android.support.v7.widget.AppCompatDrawableManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.utils.TracksHelper
-import gabyshev.denis.musicplayer.utils.data.Genre
+import gabyshev.denis.musicplayer.utils.Genre
 import org.jetbrains.anko.find
 
 /**
