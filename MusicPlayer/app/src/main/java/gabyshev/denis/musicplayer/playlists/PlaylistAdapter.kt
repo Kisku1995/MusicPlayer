@@ -1,7 +1,6 @@
 package gabyshev.denis.musicplayer.playlists
 
 import android.content.Context
-import android.content.Intent
 import android.provider.MediaStore
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,20 +9,17 @@ import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.playlists.interfaces.OnStartDragListener
 import gabyshev.denis.musicplayer.utils.TrackData
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import gabyshev.denis.musicplayer.events.TracksArrayPosition
+import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.fragments.PlayTrack
 import gabyshev.denis.musicplayer.playlists.interfaces.ItemTouchHelperAdapter
-import gabyshev.denis.musicplayer.service.MediaPlayerService
-import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
-import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatusEvent
+import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
 import gabyshev.denis.musicplayer.utils.RxBus
 import io.reactivex.disposables.CompositeDisposable
-import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.doAsync
 import java.util.*
+import javax.inject.Inject
 
 
 /**
@@ -41,7 +37,10 @@ class PlaylistAdapter(private val context: Context,
     private var itemTouchHelper: ItemTouchHelper
     private var onStartDragListener: OnStartDragListener = this
 
+    @Inject lateinit var musicPlayer: MusicMediaPlayer
+
     init {
+        (context.applicationContext as App).component.inject(this)
         val callback: ItemTouchHelper.Callback = ItemTouchHelperCallback(this)
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
@@ -74,7 +73,7 @@ class PlaylistAdapter(private val context: Context,
         holder.setHolder(arrayTracks[position])
 
         holder.view.setOnClickListener {
-            PlayTrack.playTrack(context, arrayTracks, rxBus, subscriptions, position)
+            PlayTrack.playTrack(context, arrayTracks, musicPlayer, position)
         }
 
         holder.reorder.setOnTouchListener(View.OnTouchListener { v, event ->

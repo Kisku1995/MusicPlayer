@@ -9,9 +9,7 @@ import android.os.IBinder
 import android.util.Log
 import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
-import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatusEvent
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
-import gabyshev.denis.musicplayer.utils.RxBus
 import javax.inject.Inject
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -26,9 +24,6 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
 
     private var audioManager: AudioManager? = null
 
-    private var subsriptions = CompositeDisposable()
-
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var musicMediaPlayer: MusicMediaPlayer
 
     companion object {
@@ -47,9 +42,8 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
     override fun onCreate() {
         super.onCreate()
         (applicationContext as App).component.inject(this)
-        RxListener()
-
-
+        musicMediaPlayer.service = this
+        musicMediaPlayer.playTrack()
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -60,6 +54,7 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
         if(!requestAudioFocus()) stopSelf()
 
         handleIncomingActions(intent)
+
 
         return super.onStartCommand(intent, flags, startId)
     }
@@ -85,11 +80,6 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
             val action = intent.action;
             Log.d(TAG, "action : ${action}")
 
-
-            if(action != null) {
-                musicMediaPlayer.buildNotification(this)
-            }
-
             when(action) {
                 MediaPlayerStatus.PREVIOUS.action.toString() -> {
                     musicMediaPlayer.previousTrack()
@@ -107,41 +97,12 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
                     stopSelf()
                 }
             }
-
-            if(action == null) {
-                rxBus.send(MediaPlayerStatusEvent(MediaPlayerStatus.CREATE.action))
-            }
         }
-    }
-
-    private fun RxListener() {
-        subsriptions.addAll(
-                getDisposable(MediaPlayerStatus.PAUSE.action),
-                getDisposable(MediaPlayerStatus.RESUME.action)
-        )
-    }
-
-    private fun getDisposable(action: Int): Disposable {
-        return rxBus.toObservable()
-                .subscribe( {
-                    if(it is MediaPlayerStatusEvent) {
-                        Log.d(TAG, "ACTION : ${it.action}")
-                        musicMediaPlayer.buildNotification(this)
-                        handleIncomingActions(getAction(action)) // pause
-                    }
-                })
-    }
-
-    private fun getAction(action: Int): Intent {
-        val playbackAction = Intent(this, MediaPlayerService::class.java)
-        playbackAction.action = action.toString()
-        return playbackAction
     }
 
     override fun onDestroy() {
         removeAudioFocus()
         musicMediaPlayer.onDestroy()
-        subsriptions.dispose()
         stopForeground(true)
         super.onDestroy()
     }

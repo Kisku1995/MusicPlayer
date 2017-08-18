@@ -7,15 +7,12 @@ import android.support.v7.widget.AppCompatDrawableManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
+import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
-import gabyshev.denis.musicplayer.utils.RxBus
 import kotlinx.android.synthetic.main.fragment_player.*
-import org.jetbrains.anko.find
 import javax.inject.Inject
 
 /**
@@ -23,7 +20,7 @@ import javax.inject.Inject
  */
 class PlayerFragment: Fragment() {
     private val TAG = "PlayerFragment"
-    
+
     @Inject lateinit var musicPlayer: MusicMediaPlayer
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -31,9 +28,10 @@ class PlayerFragment: Fragment() {
 
         (context.applicationContext as App).component.inject(this)
 
-        setNoAlbum()
-
         playPause.setOnClickListener { clickPlayPauseButton() }
+
+        isMusicPlayerPlaying()
+
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View
@@ -81,6 +79,14 @@ class PlayerFragment: Fragment() {
             musicPlayer.pauseTrack()
         } else {
             musicPlayer.resumeTrack()
+        }
+    }
+
+    fun isMusicPlayerPlaying() {
+        if(MediaPlayerService.isRunning(context, MediaPlayerService::class.java)) {
+            setPlayer()
+        } else {
+            setNoAlbum()
         }
     }
 

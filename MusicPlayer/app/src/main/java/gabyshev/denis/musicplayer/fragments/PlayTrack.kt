@@ -6,7 +6,7 @@ import android.util.Log
 import gabyshev.denis.musicplayer.events.TracksArrayPosition
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
-import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatusEvent
+import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
 import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.TrackData
 import io.reactivex.disposables.CompositeDisposable
@@ -20,25 +20,12 @@ object PlayTrack {
 
     fun playTrack(context: Context,
             arrayObject: ArrayList<TrackData>,
-            rxBus: RxBus,
-            subscriptions: CompositeDisposable,
+            musicPlayer: MusicMediaPlayer,
             position: Int) {
         if(!MediaPlayerService.isRunning(context, MediaPlayerService::class.java)) {
             context.startService(Intent(context, MediaPlayerService::class.java))
-
-            Log.d(TAG, "service is not running")
-
-            subscriptions.add(
-                    rxBus.toObservable()
-                            .subscribe({
-                                if(it is MediaPlayerStatusEvent && it.action == MediaPlayerStatus.CREATE.action) {
-                                    rxBus.send(TracksArrayPosition(arrayObject, position))
-                                }
-                            })
-            )
-        } else {
-            Log.d(TAG, "service is running")
-            rxBus.send(TracksArrayPosition(arrayObject, position))
         }
+
+        musicPlayer.setPlaylist(arrayObject, position)
     }
 }

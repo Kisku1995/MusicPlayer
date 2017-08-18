@@ -22,6 +22,7 @@ import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.TrackData
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_main_menu.*
 import javax.inject.Inject
 
 /**
@@ -29,23 +30,21 @@ import javax.inject.Inject
  */
 
 class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
-    var mediaPlayer: MediaPlayer = MediaPlayer()
+    private val mediaPlayer: MediaPlayer = MediaPlayer()
     private var playlist: ArrayList<TrackData>? = null
     private var activeAudio: Int = 0
     private var resumePosition: Int = 0
-    private var isPlaying = true
-
-    private var subsriptions = CompositeDisposable()
 
     private val TAG = "MusicMediaPlayer"
 
-    @Inject lateinit var rxBus: RxBus
+    var service: MediaPlayerService? = null
+
     @Inject lateinit var fragmentPlayer: PlayerFragment
+
 
     init {
         app.component.inject(this)
         initMediaPlayer()
-        RxListener()
     }
 
     fun initMediaPlayer() {
@@ -59,45 +58,30 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
     }
 
     fun playTrack() {
-        isPlaying = true
-        mediaPlayer.stop()
-        mediaPlayer.reset()
-        mediaPlayer.setDataSource(playlist?.get(activeAudio)?.data)
-        mediaPlayer.prepare()
-        mediaPlayer.start()
-        fragmentPlayer.setPlayer()
+        if(service != null) {
+            mediaPlayer.stop()
+            mediaPlayer.reset()
+            mediaPlayer.setDataSource(playlist?.get(activeAudio)?.data)
+            mediaPlayer.prepare()
+            mediaPlayer.start()
+            updateFragmentPlayer()
+            buildNotification()
+        }
     }
 
-    fun setActiveAudioAndPlay(activeAudioPosition: Int) {
-        activeAudio = activeAudioPosition
-        playTrack()
-    }
-
-    fun setPlaylist(playlist: ArrayList<TrackData>) {
+    fun setPlaylist(playlist: ArrayList<TrackData>, position: Int) {
         this.playlist = playlist
+        activeAudio = position
+        playTrack()
     }
 
     override fun onCompletion(p0: MediaPlayer?) {
         nextTrack()
     }
 
-    private fun RxListener() {
-        Log.d(TAG, "RxListener")
 
-        subsriptions.addAll(
-                rxBus.toObservable()
-                        .subscribe({
-                            if(it is TracksArrayPosition) {
-                                setPlaylist(it.arrayTracks)
-                                setActiveAudioAndPlay(it.position)
-                                playTrack()
-                            }
-                        })
-        )
-    }
-
-    fun buildNotification(service: MediaPlayerService){
-        val context: Context = service.applicationContext
+    fun buildNotification(){
+        val context: Context = service!!.applicationContext
         val views: RemoteViews = RemoteViews(context.packageName, R.layout.media_player_notification)
         val track = playlist!![activeAudio]
 
@@ -113,7 +97,7 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
 
         views.setOnClickPendingIntent(R.id.previous, playbackAction(context, MediaPlayerStatus.PREVIOUS))
 
-        if(isPlaying) {
+        if(isPlaying()) {
             views.setImageViewResource(R.id.playPause, R.drawable.pause)
             views.setOnClickPendingIntent(R.id.playPause, playbackAction(context, MediaPlayerStatus.PAUSE))
         } else {
@@ -135,7 +119,7 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
                 .setContent(views)
                 .setContentIntent(pIntent)
 
-        service.startForeground(1338, notificationBuilder.build())
+        service!!.startForeground(1338, notificationBuilder.build())
     }
 
     fun playbackAction(context: Context, action: MediaPlayerStatus): PendingIntent? {
@@ -159,23 +143,27 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
     }
 
     fun pauseTrack() {
-        isPlaying = false
         resumePosition = mediaPlayer.currentPosition
         mediaPlayer.pause()
-        fragmentPlayer.setPlayer()
+        updateFragmentPlayer()
+        buildNotification()
     }
 
     fun resumeTrack() {
-        isPlaying = true
         mediaPlayer.seekTo(resumePosition)
         mediaPlayer.start()
-        fragmentPlayer.setPlayer()
+        updateFragmentPlayer()
+        buildNotification()
     }
 
     fun onDestroy() {
-        mediaPlayer.release()
-        subsriptions.dispose()
-        fragmentPlayer.destroyPlayer()
+        service = null
+        mediaPlayer.stop()
+
+        if(fragmentPlayer.id != 0) {
+            fragmentPlayer.destroyPlayer()
+            mediaPlayer.release()
+        }
     }
 
     fun isPlaying() = mediaPlayer.isPlaying
@@ -202,6 +190,12 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
                 Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK")
                 if(mediaPlayer.isPlaying) mediaPlayer.setVolume(0.1f, 0.1f)
             }
+        }
+    }
+
+    fun updateFragmentPlayer() {
+        if(fragmentPlayer.id != 0) {
+            fragmentPlayer.setPlayer()
         }
     }
 }

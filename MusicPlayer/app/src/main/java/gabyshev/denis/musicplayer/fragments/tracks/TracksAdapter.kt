@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.events.*
 import gabyshev.denis.musicplayer.fragments.PlayTrack
@@ -11,9 +12,10 @@ import gabyshev.denis.musicplayer.fragments.RecyclerViewSelectAbstract
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.TrackData
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
-import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatusEvent
+import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
 import gabyshev.denis.musicplayer.utils.RxBus
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
 /**
  * Created by Borya on 15.07.2017.
@@ -27,7 +29,10 @@ class TracksAdapter(private val context: Context,
 
     override val classToken = TrackData::class.java
 
+    @Inject lateinit var musicPlayer: MusicMediaPlayer
+
     init {
+        (context.applicationContext as App).component.inject(this)
        subscribe()
     }
 
@@ -38,6 +43,6 @@ class TracksAdapter(private val context: Context,
     override fun onBindViewHolder(holder: TracksHolder, position: Int) {
         holder.bindTracksHolder(context, arrayTracks[position], position)
 
-        holderTracks(holder, position, {PlayTrack.playTrack(context, arrayTracks, rxBus, subscriptions, position)})
+        holderTracks(holder, position, {PlayTrack.playTrack(context, arrayTracks, musicPlayer, position)})
     }
 }
