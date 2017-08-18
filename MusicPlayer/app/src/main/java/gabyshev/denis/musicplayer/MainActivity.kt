@@ -23,12 +23,12 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), SelectListener {
     private val TAG = "MainActivity"
 
-    private val player = PlayerFragment.instance()
     private var selectFragment = SelectFragment()
 
     private var isSelect: Boolean = false
 
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var player: PlayerFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

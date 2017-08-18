@@ -124,9 +124,6 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
     private fun getDisposable(action: Int): Disposable {
         return rxBus.toObservable()
                 .subscribe( {
-
-
-//                    if(it is MediaPlayerStatusEvent && it.action == action) {
                     if(it is MediaPlayerStatusEvent) {
                         Log.d(TAG, "ACTION : ${it.action}")
                         musicMediaPlayer.buildNotification(this)
@@ -150,29 +147,7 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
     }
 
     override fun onAudioFocusChange(focusState: Int) {
-        when(focusState) {
-            AudioManager.AUDIOFOCUS_GAIN -> {
-                Log.d(TAG, "AUDIOFOCUS_GAIN")
-                if(!musicMediaPlayer.mediaPlayer.isPlaying) {
-                    musicMediaPlayer.resumeTrack()
-                }
-                musicMediaPlayer.mediaPlayer.setVolume(1.0f, 1.0f)
-            }
-            AudioManager.AUDIOFOCUS_LOSS -> {
-                Log.d(TAG, "AUDIOFOCUS_LOSS")
-                if(musicMediaPlayer.mediaPlayer.isPlaying) {
-                    musicMediaPlayer.pauseTrack()
-             }
-            }
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
-                Log.d(TAG, "AUDIOFOCUS_GAIN_TRANSIENT")
-                if(musicMediaPlayer.mediaPlayer.isPlaying) musicMediaPlayer.pauseTrack()
-            }
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
-                Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK")
-                if(musicMediaPlayer.mediaPlayer.isPlaying) musicMediaPlayer.mediaPlayer.setVolume(0.1f, 0.1f)
-            }
-        }
+        musicMediaPlayer.focusChange(focusState)
     }
 }
 

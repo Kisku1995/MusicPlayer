@@ -10,8 +10,7 @@ enum class MediaPlayerStatus(val action: Int) {
     PAUSE(1),
     RESUME(2),
     NEXT(3),
-    DESTROY(4),
-    PLAY(5)
+    DESTROY(4)
 }
 
 data class MediaPlayerStatusEvent(val action: Int)

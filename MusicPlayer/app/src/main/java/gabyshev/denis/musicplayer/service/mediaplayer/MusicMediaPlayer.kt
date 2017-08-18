@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.support.v4.app.NotificationCompat
 import android.util.Log
@@ -14,8 +15,8 @@ import android.widget.RemoteViews
 import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.events.ServiceActivity
 import gabyshev.denis.musicplayer.events.TracksArrayPosition
+import gabyshev.denis.musicplayer.fragments.player.PlayerFragment
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.RxBus
@@ -39,6 +40,7 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
     private val TAG = "MusicMediaPlayer"
 
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var fragmentPlayer: PlayerFragment
 
     init {
         app.component.inject(this)
@@ -63,8 +65,7 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
         mediaPlayer.setDataSource(playlist?.get(activeAudio)?.data)
         mediaPlayer.prepare()
         mediaPlayer.start()
-        rxBus.send(ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.RESUME.action))
-        rxBus.track = ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.RESUME.action)
+        fragmentPlayer.setPlayer()
     }
 
     fun setActiveAudioAndPlay(activeAudioPosition: Int) {
@@ -87,7 +88,6 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
                 rxBus.toObservable()
                         .subscribe({
                             if(it is TracksArrayPosition) {
-                                Log.d(TAG, "${it.arrayTracks[it.position].title}")
                                 setPlaylist(it.arrayTracks)
                                 setActiveAudioAndPlay(it.position)
                                 playTrack()
@@ -162,22 +162,46 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
         isPlaying = false
         resumePosition = mediaPlayer.currentPosition
         mediaPlayer.pause()
-        rxBus.send(ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.PAUSE.action))
-        rxBus.track = ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.PAUSE.action)
+        fragmentPlayer.setPlayer()
     }
 
     fun resumeTrack() {
         isPlaying = true
         mediaPlayer.seekTo(resumePosition)
         mediaPlayer.start()
-        rxBus.send(ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.RESUME.action))
-        rxBus.track = ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.RESUME.action)
+        fragmentPlayer.setPlayer()
     }
 
     fun onDestroy() {
         mediaPlayer.release()
         subsriptions.dispose()
-        rxBus.track = null
-        rxBus.send(ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.DESTROY.action))
+        fragmentPlayer.destroyPlayer()
+    }
+
+    fun isPlaying() = mediaPlayer.isPlaying
+
+    fun focusChange(focusState: Int) {
+        when(focusState) {
+            AudioManager.AUDIOFOCUS_GAIN -> {
+                Log.d(TAG, "AUDIOFOCUS_GAIN")
+                if(mediaPlayer.isPlaying) {
+                }
+                mediaPlayer.setVolume(1.0f, 1.0f)
+            }
+            AudioManager.AUDIOFOCUS_LOSS -> {
+                Log.d(TAG, "AUDIOFOCUS_LOSS")
+                if(mediaPlayer.isPlaying) {
+                    pauseTrack()
+                }
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                Log.d(TAG, "AUDIOFOCUS_GAIN_TRANSIENT")
+                if(mediaPlayer.isPlaying) pauseTrack()
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK")
+                if(mediaPlayer.isPlaying) mediaPlayer.setVolume(0.1f, 0.1f)
+            }
+        }
     }
 }
