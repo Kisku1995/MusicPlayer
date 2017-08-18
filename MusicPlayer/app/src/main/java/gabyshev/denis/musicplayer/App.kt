@@ -4,6 +4,8 @@ import android.app.Application
 import gabyshev.denis.musicplayer.injection.AppComponent
 import gabyshev.denis.musicplayer.injection.AppModule
 import gabyshev.denis.musicplayer.injection.DaggerAppComponent
+import gabyshev.denis.musicplayer.service.MediaPlayerService
+import gabyshev.denis.musicplayer.utils.RxBus
 
 /**
  * Created by Borya on 15.07.2017.
@@ -16,6 +18,7 @@ class App : Application() {
                 .builder()
                 .appModule(AppModule(this))
                 .build()
+
     }
 
     override fun onCreate() {

@@ -24,12 +24,12 @@ import io.reactivex.disposables.Disposable
 class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
     private val TAG = "MediaPlayerService"
 
-    private lateinit var musicMediaPlayer: MusicMediaPlayer
     private var audioManager: AudioManager? = null
 
     private var subsriptions = CompositeDisposable()
 
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var musicMediaPlayer: MusicMediaPlayer
 
     companion object {
         fun isRunning(context: Context, serviceClass: Class<*>): Boolean {
@@ -43,12 +43,13 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
         }
     }
 
+
     override fun onCreate() {
         super.onCreate()
-
         (applicationContext as App).component.inject(this)
-        musicMediaPlayer = MusicMediaPlayer(this, rxBus)
         RxListener()
+
+
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -84,6 +85,11 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
             val action = intent.action;
             Log.d(TAG, "action : ${action}")
 
+
+            if(action != null) {
+                musicMediaPlayer.buildNotification(this)
+            }
+
             when(action) {
                 MediaPlayerStatus.PREVIOUS.action.toString() -> {
                     musicMediaPlayer.previousTrack()
@@ -118,7 +124,12 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
     private fun getDisposable(action: Int): Disposable {
         return rxBus.toObservable()
                 .subscribe( {
-                    if(it is MediaPlayerStatusEvent && it.action == action) {
+
+
+//                    if(it is MediaPlayerStatusEvent && it.action == action) {
+                    if(it is MediaPlayerStatusEvent) {
+                        Log.d(TAG, "ACTION : ${it.action}")
+                        musicMediaPlayer.buildNotification(this)
                         handleIncomingActions(getAction(action)) // pause
                     }
                 })

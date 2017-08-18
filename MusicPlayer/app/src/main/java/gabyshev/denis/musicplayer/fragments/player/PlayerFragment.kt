@@ -17,6 +17,7 @@ import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.events.ServiceActivity
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatusEvent
+import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
 import gabyshev.denis.musicplayer.utils.RxBus
 import io.reactivex.disposables.CompositeDisposable
 import org.jetbrains.anko.find
@@ -28,7 +29,8 @@ import javax.inject.Inject
 class PlayerFragment: Fragment() {
     private val TAG = "PlayerFragment"
 
-   @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var musicPlayer: MusicMediaPlayer
 
     private lateinit var image: ImageView
     private lateinit var title: TextView
@@ -87,6 +89,8 @@ class PlayerFragment: Fragment() {
                         .subscribe({
                             if(it is ServiceActivity) {
                                 setPlayer(it)
+
+                                println(musicPlayer.getCurrentTrack()?.toString())
                             }
                         })
         )
@@ -116,6 +120,7 @@ class PlayerFragment: Fragment() {
                 playPause.setImageDrawable(AppCompatDrawableManager.get().getDrawable(context, R.drawable.pause))
                 isPlaying = true
                 playPause.isEnabled = true
+
             }
             MediaPlayerStatus.PAUSE.action -> {
                 playPause.setImageDrawable(AppCompatDrawableManager.get().getDrawable(context, R.drawable.play))

@@ -11,6 +11,7 @@ import android.media.MediaPlayer
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.widget.RemoteViews
+import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.events.ServiceActivity
@@ -20,13 +21,13 @@ import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.TrackData
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
 /**
  * Created by Borya on 15.07.2017.
  */
 
-class MusicMediaPlayer(private val service: Service, private val rxBus: RxBus): MediaPlayer.OnCompletionListener {
-    //private var audioManager: AudioManager = null
+class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
     var mediaPlayer: MediaPlayer = MediaPlayer()
     private var playlist: ArrayList<TrackData>? = null
     private var activeAudio: Int = 0
@@ -37,8 +38,11 @@ class MusicMediaPlayer(private val service: Service, private val rxBus: RxBus): 
 
     private val TAG = "MusicMediaPlayer"
 
+    @Inject lateinit var rxBus: RxBus
+
     init {
-       initMediaPlayer()
+        app.component.inject(this)
+        initMediaPlayer()
         RxListener()
     }
 
@@ -57,7 +61,6 @@ class MusicMediaPlayer(private val service: Service, private val rxBus: RxBus): 
         mediaPlayer.stop()
         mediaPlayer.reset()
         mediaPlayer.setDataSource(playlist?.get(activeAudio)?.data)
-        buildNotification(playlist!![activeAudio])
         mediaPlayer.prepare()
         mediaPlayer.start()
         rxBus.send(ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.RESUME.action))
@@ -71,10 +74,6 @@ class MusicMediaPlayer(private val service: Service, private val rxBus: RxBus): 
 
     fun setPlaylist(playlist: ArrayList<TrackData>) {
         this.playlist = playlist
-
-        for(item in playlist) {
-            Log.d(TAG, item.title)
-        }
     }
 
     override fun onCompletion(p0: MediaPlayer?) {
@@ -88,16 +87,19 @@ class MusicMediaPlayer(private val service: Service, private val rxBus: RxBus): 
                 rxBus.toObservable()
                         .subscribe({
                             if(it is TracksArrayPosition) {
+                                Log.d(TAG, "${it.arrayTracks[it.position].title}")
                                 setPlaylist(it.arrayTracks)
                                 setActiveAudioAndPlay(it.position)
+                                playTrack()
                             }
                         })
         )
     }
 
-    fun buildNotification(track: TrackData){
+    fun buildNotification(service: MediaPlayerService){
         val context: Context = service.applicationContext
         val views: RemoteViews = RemoteViews(context.packageName, R.layout.media_player_notification)
+        val track = playlist!![activeAudio]
 
         views.setTextViewText(R.id.title, track.title)
         views.setTextViewText(R.id.artist, track.artist)
@@ -160,7 +162,6 @@ class MusicMediaPlayer(private val service: Service, private val rxBus: RxBus): 
         isPlaying = false
         resumePosition = mediaPlayer.currentPosition
         mediaPlayer.pause()
-        buildNotification(playlist!![activeAudio])
         rxBus.send(ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.PAUSE.action))
         rxBus.track = ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.PAUSE.action)
     }
@@ -169,7 +170,6 @@ class MusicMediaPlayer(private val service: Service, private val rxBus: RxBus): 
         isPlaying = true
         mediaPlayer.seekTo(resumePosition)
         mediaPlayer.start()
-        buildNotification(playlist!![activeAudio])
         rxBus.send(ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.RESUME.action))
         rxBus.track = ServiceActivity(playlist!![activeAudio], MediaPlayerStatus.RESUME.action)
     }

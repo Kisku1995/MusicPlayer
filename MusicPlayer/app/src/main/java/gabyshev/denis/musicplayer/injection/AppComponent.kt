@@ -16,6 +16,7 @@ import gabyshev.denis.musicplayer.playlists.DeletePlaylistDialog
 import gabyshev.denis.musicplayer.playlists.PlaylistActivity
 import gabyshev.denis.musicplayer.playlists.add_tracks.AddTracksToPlaylistDialog
 import gabyshev.denis.musicplayer.service.MediaPlayerService
+import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
 import javax.inject.Singleton
 
 /**
@@ -39,4 +40,5 @@ interface AppComponent {
     fun inject(addTracksToPlaylistDialog: AddTracksToPlaylistDialog)
     fun inject(deletePlaylistDialog: DeletePlaylistDialog)
     fun inject(playlistActivity: PlaylistActivity)
+    fun inject(musicMediaPlayer: MusicMediaPlayer)
 }
