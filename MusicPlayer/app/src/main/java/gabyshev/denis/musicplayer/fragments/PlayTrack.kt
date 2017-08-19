@@ -23,6 +23,7 @@ object PlayTrack {
             musicPlayer: MusicMediaPlayer,
             position: Int) {
         if(!MediaPlayerService.isRunning(context, MediaPlayerService::class.java)) {
+            Log.d(TAG, "service is running : ${MediaPlayerService.isRunning(context, MediaPlayerService::class.java)}")
             context.startService(Intent(context, MediaPlayerService::class.java))
         }
 

@@ -56,7 +56,7 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
         handleIncomingActions(intent)
 
 
-        return super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY
     }
 
     private fun requestAudioFocus(): Boolean {
@@ -101,6 +101,7 @@ class MediaPlayerService: Service(), AudioManager.OnAudioFocusChangeListener {
     }
 
     override fun onDestroy() {
+        Log.d(TAG, "onDestroy")
         removeAudioFocus()
         musicMediaPlayer.onDestroy()
         stopForeground(true)

@@ -58,7 +58,7 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
     }
 
     fun playTrack() {
-        if(service != null) {
+        if(service != null && playlist!!.size > 0) {
             mediaPlayer.stop()
             mediaPlayer.reset()
             mediaPlayer.setDataSource(playlist?.get(activeAudio)?.data)
@@ -157,13 +157,17 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
     }
 
     fun onDestroy() {
+        Log.d(TAG, "onDestroy")
         service = null
-        mediaPlayer.stop()
 
         if(fragmentPlayer.id != 0) {
+            Log.d(TAG, "destroy completely")
             fragmentPlayer.destroyPlayer()
-            mediaPlayer.release()
         }
+
+        mediaPlayer.stop()
+
+
     }
 
     fun isPlaying() = mediaPlayer.isPlaying

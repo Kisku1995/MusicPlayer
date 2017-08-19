@@ -58,7 +58,6 @@ class PlayerFragment: Fragment() {
         setTitleArtist(getString(R.string.no_title), getString(R.string.no_artist))
         setNoAlbum()
         setPlayPauseDrawable(R.drawable.play)
-        playPause.isEnabled = false
     }
 
     fun setPlayPauseDrawable(drawable: Int) {
