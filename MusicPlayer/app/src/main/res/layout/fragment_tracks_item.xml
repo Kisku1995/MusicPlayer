@@ -9,25 +9,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
-        android:id="@+id/title"
-        android:textColor="@color/fragment_tracks_text"
-        android:paddingLeft="16dp"
-        tools:text="American Idiot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/artist"
-        android:layout_below="@id/title"
-        android:maxLength="30"
-        android:textColor="@color/fragment_tracks_text"
-        android:paddingLeft="16dp"
-        android:fontFamily="sans-serif-thin"
-        tools:text="Green Day"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
         android:id="@+id/duration"
         android:maxLength="30"
         android:textColor="@color/fragment_tracks_text"
@@ -37,5 +18,38 @@
         tools:text="2:43"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+
+    <RelativeLayout
+        android:layout_toLeftOf="@id/duration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title"
+            android:lines="1"
+            android:ellipsize="marquee"
+            android:textColor="@color/fragment_tracks_text"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            tools:text="American Idiot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/artist"
+            android:layout_below="@id/title"
+            android:lines="1"
+            android:ellipsize="marquee"
+            android:textColor="@color/fragment_tracks_text"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:fontFamily="sans-serif-thin"
+            tools:text="Green Day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>
