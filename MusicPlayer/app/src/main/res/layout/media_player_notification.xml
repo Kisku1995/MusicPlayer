@@ -14,33 +14,8 @@
         android:layout_width="64dp"
         android:layout_height="64dp" />
 
-    <RelativeLayout
-        android:id="@+id/container_title_artist"
-        android:paddingLeft="8dp"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:textColor="#000000"
-            tools:text="American Idiot"
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:maxLength="30"
-            android:textColor="#000000"
-            android:fontFamily="sans-serif-thin"
-            tools:text="Green Day"
-            android:layout_below="@id/title"
-            android:id="@+id/artist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
-
     <LinearLayout
+        android:id="@+id/buttons"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
@@ -90,6 +65,36 @@
             android:layout_height="@dimen/media_player_notification_button" />
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/container_title_artist"
+        android:paddingLeft="8dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/buttons"
+        android:layout_toRightOf="@id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:lines="1"
+            android:ellipsize="marquee"
+            android:textColor="#000000"
+            tools:text="American Idiot"
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:lines="1"
+            android:ellipsize="marquee"
+            android:textColor="#000000"
+            android:fontFamily="sans-serif-thin"
+            tools:text="Green Day"
+            android:layout_below="@id/title"
+            android:id="@+id/artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

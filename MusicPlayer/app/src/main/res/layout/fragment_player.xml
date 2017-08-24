@@ -13,31 +13,6 @@
         android:layout_margin="4dp"
         android:paddingLeft="8dp" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/image"
-        android:orientation="vertical"
-        android:paddingLeft="8dp">
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLength="30"
-            android:text="No Title"
-            android:textColor="#000000" />
-
-        <TextView
-            android:id="@+id/artist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-thin"
-            android:maxLength="30"
-            android:text="No Artist"
-            android:textColor="#000000" />
-    </LinearLayout>
 
     <ImageView
         android:layout_alignParentRight="true"
@@ -47,4 +22,34 @@
         android:layout_marginRight="8dp"
         android:layout_width="48dp"
         android:layout_height="48dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/playPause"
+        android:layout_toRightOf="@id/image"
+        android:orientation="vertical"
+        android:paddingLeft="8dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:ellipsize="marquee"
+            android:text="No Title"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-thin"
+            android:lines="1"
+            android:ellipsize="marquee"
+            android:text="No Artist"
+            android:textColor="#000000" />
+    </LinearLayout>
+
 </RelativeLayout>
