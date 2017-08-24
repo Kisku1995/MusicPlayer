@@ -9,6 +9,7 @@ import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.playlists.interfaces.OnStartDragListener
 import gabyshev.denis.musicplayer.utils.TrackData
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import gabyshev.denis.musicplayer.App
@@ -52,10 +53,9 @@ class PlaylistAdapter(private val context: Context,
     }
 
     override fun onItemSwipe(pos: Int) {
-        arrayTracks.removeAt(pos)
-        PlaylistHelper.instance().deleteTrackFromPlaylist(context, playlistId, pos.toLong())
+        PlaylistHelper.instance().deleteTrackFromPlaylist(context, playlistId, arrayTracks[pos].id.toLong())
         notifyItemRemoved(pos)
-
+        arrayTracks.removeAt(pos)
     }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
@@ -73,7 +73,8 @@ class PlaylistAdapter(private val context: Context,
         holder.setHolder(arrayTracks[position])
 
         holder.view.setOnClickListener {
-            PlayTrack.playTrack(context, arrayTracks, musicPlayer, position)
+            Log.d(TAG, "adapterPosition = ${holder.adapterPosition}\nmusic : ${arrayTracks[holder.adapterPosition].title}")
+            PlayTrack.playTrack(context, arrayTracks, musicPlayer, holder.adapterPosition)
         }
 
         holder.reorder.setOnTouchListener(View.OnTouchListener { v, event ->
@@ -84,6 +85,7 @@ class PlaylistAdapter(private val context: Context,
         })
 
         holder.delete.setOnClickListener {
+            Log.d(TAG, "DELETE \nadapterPosition = ${holder.adapterPosition}\nmusic : ${arrayTracks[holder.adapterPosition].title}")
             onItemSwipe(holder.adapterPosition)
         }
     }
@@ -91,9 +93,10 @@ class PlaylistAdapter(private val context: Context,
     private fun moveItem(oldPos: Int, newPos: Int) {
         doAsync {
             Collections.swap(arrayTracks, oldPos, newPos)
-            MediaStore.Audio.Playlists.Members.moveItem(context.contentResolver, playlistId, oldPos, newPos);
+            MediaStore.Audio.Playlists.Members.moveItem(context.contentResolver, playlistId, oldPos, newPos)
         }
         notifyItemMoved(oldPos, newPos)
+
     }
 
 

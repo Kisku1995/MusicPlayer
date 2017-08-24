@@ -60,14 +60,12 @@ class MainActivity : AppCompatActivity(), SelectListener {
     }
 
     override fun startSelect() {
-        Log.d(TAG, "Start Select")
-       supportFragmentManager.beginTransaction().add(R.id.player, selectFragment).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.player, selectFragment).commit()
         isSelect = true
     }
 
     override fun stopSelect() {
-        Log.d(TAG, "Stop Select")
-        supportFragmentManager.beginTransaction().remove(selectFragment).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.player, player).commit()
         isSelect = false
     }
 

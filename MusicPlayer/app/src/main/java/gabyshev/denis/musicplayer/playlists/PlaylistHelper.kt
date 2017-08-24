@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.utils.TrackData
 import gabyshev.denis.musicplayer.R
@@ -16,6 +17,8 @@ import org.jetbrains.anko.toast
  * Created by 1 on 19.07.2017.
  */
 class PlaylistHelper {
+
+    private val TAG = "PlaylistHelper"
 
     companion object {
         private var instance: PlaylistHelper? = null
@@ -127,7 +130,7 @@ class PlaylistHelper {
 
     fun deleteTrackFromPlaylist(context: Context, playlistId: Long, id: Long) {
         val uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId)
-        val where = MediaStore.Audio.Playlists.Members.AUDIO_ID + "=?"
+        val where = MediaStore.Audio.Playlists.Members._ID + "=?"
         val whereval = arrayOf(id.toString())
         context.contentResolver.delete(uri, where, whereval)
     }

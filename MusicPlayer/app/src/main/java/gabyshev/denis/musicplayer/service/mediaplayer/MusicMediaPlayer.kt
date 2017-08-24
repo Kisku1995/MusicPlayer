@@ -1,7 +1,6 @@
 package gabyshev.denis.musicplayer.service.mediaplayer
 
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -15,14 +14,10 @@ import android.widget.RemoteViews
 import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.events.TracksArrayPosition
 import gabyshev.denis.musicplayer.fragments.player.PlayerFragment
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
-import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.TrackData
-import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_main_menu.*
 import javax.inject.Inject
 
 /**
@@ -118,8 +113,9 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
                 .setSmallIcon(R.drawable.music)
                 .setContent(views)
                 .setContentIntent(pIntent)
+                .build()
 
-        service!!.startForeground(1338, notificationBuilder.build())
+        service!!.startForeground(1338, notificationBuilder)
     }
 
     fun playbackAction(context: Context, action: MediaPlayerStatus): PendingIntent? {
