@@ -1,39 +1,38 @@
 # MusicPlayer
-Приложение для проигрывания музыки написанное на Kotlin. Для связи между activity и service использован RxJava и Dagger
+Media player app written on Kotlin. Used libraries for connecting activity and service: RxJava and Dagger 2
 
-**Не забудьте добавить в настройках приложения permission storage!**
+**Don't forget to add storage permission !**
 
 <p align="center"><img src="https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/tracks.png" width="360" /></p>
 
-Особенности
+Features
 -----
 
-Уведомление      |  Уведомление
+Player Notification
 :-------------------------:|:-------------------------:
-![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/notification.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/notification.png)
+![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/notification.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/notification2.png)
 
-Категория треки, плэйлисты, альбомы, артисты, жанры
+Categories : tracks, playlists, albums, artists, genres
 
-Альбомы       |  Артисты
+Albums      |  Artists
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/albums.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/artists.png)
 
-Создание своего плэйлиста
+Creating own playlist
 <p align="center"><img src="https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/create_playlist.png" width="360" /></p>
 
-Выделение альбомов, категорий, трэков, артистов, жанров для создания плэйлиста.
+Creating albums, categories, tracks, artists, genres for creating playlists.
 
-Выделение категории альбомы       |  Выделение трэков
+Selecting album categories       |  Selecting tracks
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/select1.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/select2.png)
 
-Добавление выделенных элементов в плэйлист
+Adding selected items to playlist
 <p align="center"><img src="https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/add_tracks_to_playlist.png" width="360" /></p>
 
+Creating own playlist as you want
 
-Создание своего плэйлиста под собственный вкус и проигрывание этого плэйлиста
-
-Изменение порядка трэка       |   Удаление трэка из плэйлиста
+Changing order of track     |   Removing track from playlist
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/playlist_reorder.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/playlist_delete.png)
 
