@@ -7,8 +7,10 @@
 
 Особенности
 -----
-Плеер-уведомление
-<p align="center"><img src="https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/notification.png" width="360" /></p>
+
+Уведомление      |  Уведомление
+:-------------------------:|:-------------------------:
+![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/notification.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/notification.png)
 
 Категория треки, плэйлисты, альбомы, артисты, жанры
 
@@ -34,3 +36,6 @@
 Изменение порядка трэка       |   Удаление трэка из плэйлиста
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/playlist_reorder.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/playlist_delete.png)
+
+Current track screen
+<p align="center"><img src="https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/player.png" width="360" /></p>
