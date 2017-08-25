@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import gabyshev.denis.musicplayer.events.TracksArrayPosition
+import gabyshev.denis.musicplayer.player.PlayerActivity
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.mediaplayer.MediaPlayerStatus
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
@@ -27,6 +28,8 @@ object PlayTrack {
             context.startService(Intent(context, MediaPlayerService::class.java))
         }
 
+        context.startActivity(Intent(context, PlayerActivity::class.java))
         musicPlayer.setPlaylist(arrayObject, position)
+
     }
 }

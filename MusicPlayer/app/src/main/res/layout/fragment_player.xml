@@ -1,55 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_alignParentBottom="true"
-    android:id="@+id/activity_playlist_player"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#ffffff"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_margin="4dp"
-        android:paddingLeft="8dp" />
-
-
-    <ImageView
-        android:layout_alignParentRight="true"
-        android:id="@+id/playPause"
-        android:src="@drawable/play"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        android:layout_width="48dp"
-        android:layout_height="48dp" />
-
-    <LinearLayout
+    <RelativeLayout
+        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/playPause"
-        android:layout_toRightOf="@id/image"
-        android:orientation="vertical"
-        android:paddingLeft="8dp">
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image"
+            android:background="#ffffff"
+            android:layout_centerHorizontal="true"
+            tools:background="@drawable/no_music"
+            android:scaleType="fitXY"
+            android:layout_width="192dp"
+            android:layout_height="192dp" />
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:paddingRight="32dp"
+            android:paddingLeft="32dp"
+            android:layout_below="@id/image"
             android:lines="1"
             android:ellipsize="marquee"
-            android:text="No Title"
-            android:textColor="#000000" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_centerHorizontal="true"
+            tools:text="Группа Крови"
+            android:textColor="@color/fragment_tracks_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/artist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-thin"
             android:lines="1"
             android:ellipsize="marquee"
-            android:text="No Artist"
-            android:textColor="#000000" />
-    </LinearLayout>
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:paddingTop="4dp"
+            android:paddingRight="32dp"
+            android:paddingLeft="32dp"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            tools:text="Виктор Цой"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_below="@id/artist"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/previous"
+                android:tint="#ffffff"
+                android:foreground="@drawable/ripple"
+                android:clickable="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/media_player_notification_button_margin"
+                android:src="@drawable/skip_previous"
+                android:layout_width="@dimen/media_player_notification_button"
+                android:layout_height="@dimen/media_player_notification_button" />
+            <ImageView
+                android:id="@+id/playPause"
+                android:tint="#ffffff"
+                android:foreground="@drawable/ripple"
+                android:clickable="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/media_player_notification_button_margin"
+                android:layout_marginRight="@dimen/media_player_notification_button_margin"
+                android:src="@drawable/play"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+            <ImageView
+                android:id="@+id/next"
+                android:tint="#ffffff"
+                android:foreground="@drawable/ripple"
+                android:clickable="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/media_player_notification_button_margin"
+                android:layout_marginRight="@dimen/media_player_notification_button_margin"
+                android:src="@drawable/skip_next"
+                android:layout_width="@dimen/media_player_notification_button"
+                android:layout_height="@dimen/media_player_notification_button" />
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

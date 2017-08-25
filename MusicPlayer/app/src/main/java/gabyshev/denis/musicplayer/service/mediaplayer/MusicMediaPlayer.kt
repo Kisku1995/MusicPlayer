@@ -14,7 +14,8 @@ import android.widget.RemoteViews
 import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.MainActivity
 import gabyshev.denis.musicplayer.R
-import gabyshev.denis.musicplayer.fragments.player.PlayerFragment
+import gabyshev.denis.musicplayer.fragments.player.MainPlayerFragment
+import gabyshev.denis.musicplayer.player.PlayerFragment
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.TrackData
@@ -34,6 +35,7 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
 
     var service: MediaPlayerService? = null
 
+    @Inject lateinit var mainFragmentPlayer: MainPlayerFragment
     @Inject lateinit var fragmentPlayer: PlayerFragment
 
 
@@ -156,9 +158,9 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
         Log.d(TAG, "onDestroy")
         service = null
 
-        if(fragmentPlayer.id != 0) {
+        if(mainFragmentPlayer.id != 0) {
             Log.d(TAG, "destroy completely")
-            fragmentPlayer.destroyPlayer()
+            mainFragmentPlayer.destroyPlayer()
         }
 
         mediaPlayer.stop()
@@ -194,8 +196,14 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
     }
 
     fun updateFragmentPlayer() {
+        if(mainFragmentPlayer.id != 0) {
+            mainFragmentPlayer.setPlayer()
+        }
+
         if(fragmentPlayer.id != 0) {
             fragmentPlayer.setPlayer()
         }
+
+
     }
 }

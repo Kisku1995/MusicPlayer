@@ -12,14 +12,14 @@ import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.utils.TracksHelper
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
-import kotlinx.android.synthetic.main.fragment_player.*
+import kotlinx.android.synthetic.main.fragment_main_player.*
 import javax.inject.Inject
 
 /**
  * Created by 1 on 17.07.2017.
  */
-class PlayerFragment: Fragment() {
-    private val TAG = "PlayerFragment"
+class MainPlayerFragment : Fragment() {
+    private val TAG = "MainPlayerFragment"
 
     @Inject lateinit var musicPlayer: MusicMediaPlayer
 
@@ -35,7 +35,7 @@ class PlayerFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View
-        = LayoutInflater.from(context).inflate(R.layout.fragment_player, container, false)
+        = LayoutInflater.from(context).inflate(R.layout.fragment_main_player, container, false)
 
 
     fun setPlayer() {

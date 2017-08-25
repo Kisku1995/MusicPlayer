@@ -7,16 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.view.ViewPager
-import android.util.Log
 import gabyshev.denis.musicplayer.events.EnumSelectStatus
 import gabyshev.denis.musicplayer.fragments.PlayerViewPagerAdapter
 import gabyshev.denis.musicplayer.fragments.ZoomOutPageTransformer
-import gabyshev.denis.musicplayer.fragments.player.PlayerFragment
+import gabyshev.denis.musicplayer.fragments.player.MainPlayerFragment
 import gabyshev.denis.musicplayer.fragments.select.SelectFragment
 import gabyshev.denis.musicplayer.fragments.select.SelectListener
 import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.app
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -28,7 +26,7 @@ class MainActivity : AppCompatActivity(), SelectListener {
     private var isSelect: Boolean = false
 
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var player: PlayerFragment
+    @Inject lateinit var player: MainPlayerFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

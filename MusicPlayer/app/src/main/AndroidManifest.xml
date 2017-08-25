@@ -25,6 +25,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".playlists.PlaylistActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".player.PlayerActivity"
+            android:screenOrientation="portrait" />
         <service android:name=".service.MediaPlayerService" />
     </application>
 
