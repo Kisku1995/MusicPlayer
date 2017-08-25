@@ -3,6 +3,7 @@ package gabyshev.denis.musicplayer.fragments
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import gabyshev.denis.musicplayer.category.Category
@@ -167,6 +168,21 @@ abstract class RecyclerViewSelectAbstract<T : Identifier, K : RecyclerView.ViewH
         selectedObject.add(arrayObject[position])
 
         return false
+    }
+
+    fun backgroundControl(holder: K, position: Int) {
+        TracksHelper.instance().setBackground(context, holder!!.itemView, position)
+
+        if(selectedObject.isNotEmpty()) {
+            val musicId = arrayObject[position].id
+            val background = selectedObject.filter { it.id == musicId }
+
+            if (background.isNotEmpty()) {
+                TracksHelper.instance().setSelectedBackground(context, holder.itemView, position)
+            }
+        }
+
+
     }
 
     fun addSelecting() {

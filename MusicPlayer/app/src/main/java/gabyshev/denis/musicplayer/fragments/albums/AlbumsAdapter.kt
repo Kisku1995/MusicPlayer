@@ -42,7 +42,9 @@ class AlbumsAdapter(private val context: Context,
     override fun onBindViewHolder(holder: AlbumHolder, position: Int) {
         holder.setHolder(context, arrayObject[position], position)
 
-       holderAlbumArtistGenre(holder, position, arrayObject[position].album)
+        holderAlbumArtistGenre(holder, position, arrayObject[position].album)
+
+        backgroundControl(holder, position)
     }
 
 }

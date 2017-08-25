@@ -40,6 +40,8 @@ class GenresAdapter(private val context: Context,
         holder.setHolder(context, arrayObject[position], position)
 
         holderAlbumArtistGenre(holder, position, arrayObject[position].name)
+
+        backgroundControl(holder, position)
     }
 
     override fun getItemCount(): Int = arrayObject.size

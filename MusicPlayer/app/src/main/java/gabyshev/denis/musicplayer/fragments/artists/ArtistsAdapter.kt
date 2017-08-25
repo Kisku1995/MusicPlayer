@@ -44,5 +44,7 @@ class ArtistsAdapter(private val context: Context,
         holder.setHolder(context, arrayObject[position], position)
 
         holderAlbumArtistGenre(holder, position, arrayObject[position].artist)
+
+        backgroundControl(holder, position)
     }
 }

@@ -8,7 +8,7 @@ Media player app written on Kotlin. Used libraries for connecting activity and s
 Features
 -----
 
-Player Notification
+Player Notification  | Notification (Virtual Device)
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/notification.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/notification2.png)
 

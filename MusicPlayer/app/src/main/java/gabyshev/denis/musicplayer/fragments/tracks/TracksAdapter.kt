@@ -44,5 +44,7 @@ class TracksAdapter(private val context: Context,
         holder.bindTracksHolder(context, arrayTracks[position], position)
 
         holderTracks(holder, position, {PlayTrack.playTrack(context, arrayTracks, musicPlayer, position)})
+
+        backgroundControl(holder, position)
     }
 }

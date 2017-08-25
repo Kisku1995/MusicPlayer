@@ -49,6 +49,8 @@ class PlaylistsAdapter(private val context: Context, private var playlistsArray:
 
             context.startActivity(intent)
         }
+
+
     }
 
     override fun getItemCount(): Int = playlistsArray.size
