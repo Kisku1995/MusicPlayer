@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <ImageView
+        android:id="@+id/background"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <RelativeLayout
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
@@ -14,7 +20,7 @@
             android:background="#ffffff"
             android:layout_centerHorizontal="true"
             tools:background="@drawable/no_music"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:layout_width="192dp"
             android:layout_height="192dp" />
 

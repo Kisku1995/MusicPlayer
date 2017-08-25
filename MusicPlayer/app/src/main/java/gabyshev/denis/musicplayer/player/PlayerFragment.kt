@@ -14,6 +14,7 @@ import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.service.MediaPlayerService
 import gabyshev.denis.musicplayer.service.mediaplayer.MusicMediaPlayer
 import gabyshev.denis.musicplayer.utils.TracksHelper
+import jp.wasabeef.blurry.Blurry
 import kotlinx.android.synthetic.main.fragment_player.*
 import javax.inject.Inject
 
@@ -54,8 +55,10 @@ class PlayerFragment : Fragment() {
 
         if(bitmap != null) {
             image.setImageBitmap(bitmap)
+            Blurry.with(context).from(bitmap).into(background)
         } else {
             image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.no_music))
+            background.setImageDrawable(null)
         }
 
         when(musicPlayer.isPlaying()) {
