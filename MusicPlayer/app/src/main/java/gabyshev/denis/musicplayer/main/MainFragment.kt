@@ -33,16 +33,12 @@ class MainFragment : Fragment(), SelectListener {
 
     private var isSelect: Boolean = false
 
-    private lateinit var supportFragmentManager : FragmentManager
-
     private lateinit var callback: SelectListener
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         (context.applicationContext as App).component.inject(this)
-
-        supportFragmentManager = activity.supportFragmentManager
 
         setupActivity()
     }
@@ -58,12 +54,12 @@ class MainFragment : Fragment(), SelectListener {
     }
 
     override fun startSelect() {
-        supportFragmentManager.beginTransaction().replace(R.id.player, selectFragment).commit()
+        childFragmentManager.beginTransaction().replace(R.id.player, selectFragment).commit()
         isSelect = true
     }
 
     override fun stopSelect() {
-        supportFragmentManager.beginTransaction().replace(R.id.player, player).commit()
+        childFragmentManager.beginTransaction().replace(R.id.player, player).commit()
         isSelect = false
     }
 

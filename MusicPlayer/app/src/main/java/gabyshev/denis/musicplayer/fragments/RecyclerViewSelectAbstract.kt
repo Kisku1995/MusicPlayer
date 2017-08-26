@@ -94,6 +94,7 @@ abstract class RecyclerViewSelectAbstract<T : Identifier, K : RecyclerView.ViewH
     }
 
     fun cancelSelecting() {
+        Log.d(TAG, "CANCEL")
         selectedObject.clear()
         selectListener.stopSelect()
         notifyDataSetChanged()

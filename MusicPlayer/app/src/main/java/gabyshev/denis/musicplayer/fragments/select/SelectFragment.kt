@@ -1,5 +1,7 @@
 package gabyshev.denis.musicplayer.fragments.select
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +13,7 @@ import gabyshev.denis.musicplayer.App
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.events.EnumSelectStatus
 import gabyshev.denis.musicplayer.utils.RxBus
+import kotlinx.android.synthetic.main.fragment_select.*
 import org.jetbrains.anko.find
 import javax.inject.Inject
 
@@ -18,11 +21,8 @@ import javax.inject.Inject
  * Created by Borya on 18.07.2017.
  */
 class SelectFragment: Fragment() {
-    private lateinit var selectCount: TextView
-    private lateinit var cancel: ImageView
-    private lateinit var add: ImageView
-
     @Inject lateinit var rxBus: RxBus
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,14 +43,8 @@ class SelectFragment: Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = LayoutInflater.from(context).inflate(R.layout.fragment_select, container, false)
-
-        selectCount = view.find(R.id.selectCount)
-        cancel = view.find(R.id.cancel)
-        add = view.find(R.id.add)
-
-        return view
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return  inflater.inflate(R.layout.fragment_select, container, false)
     }
 
     fun selectCount(text: String) {
