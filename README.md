@@ -1,5 +1,5 @@
 # MusicPlayer
-Media player app written on Kotlin. Used libraries for connecting activity and service: RxJava and Dagger 2
+Media player app is written on Kotlin. Libraries used for connecting activity and service: RxJava and Dagger 2
 
 <p align="center"><img src="https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/tracks.png" width="360" /></p>
 
