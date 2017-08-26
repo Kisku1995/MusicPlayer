@@ -163,6 +163,10 @@ class MusicMediaPlayer(val app: App): MediaPlayer.OnCompletionListener {
             mainFragmentPlayer.destroyPlayer()
         }
 
+        if(fragmentPlayer.id != 0) {
+            fragmentPlayer.setPlayPauseDrawable(R.drawable.play)
+        }
+
         mediaPlayer.stop()
 
 
