@@ -11,16 +11,19 @@ Player Notification
 
 
 Categories : tracks, playlists, albums, artists, genres
+
 Albums      |  Artists
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/albums.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/artists.png)
 
 
 Creating own playlist
+
 <p align="center"><img src="https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/create_playlist.png" width="360" /></p>
 
 
 Creating albums, categories, tracks, artists, genres for creating playlists.
+
 Selecting album categories       |  Selecting tracks
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/select1.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/select2.png)
@@ -31,6 +34,7 @@ Adding selected items to playlist
 
 
 Creating own playlist as you want
+
 Changing order of track     |   Removing track from playlist
 :-------------------------:|:-------------------------:
 ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/playlist_reorder.png)  |  ![](https://raw.githubusercontent.com/dns21395/MusicPlayer/master/ReadmeFiles/playlist_delete.png)
