@@ -1,4 +1,4 @@
-package gabyshev.denis.musicplayer
+package gabyshev.denis.musicplayer.main
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.view.ViewPager
+import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.events.EnumSelectStatus
 import gabyshev.denis.musicplayer.fragments.PlayerViewPagerAdapter
 import gabyshev.denis.musicplayer.fragments.ZoomOutPageTransformer
@@ -19,61 +20,31 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), SelectListener {
-    private val TAG = "MainActivity"
+    val mainFragment = MainFragment()
 
-    private var selectFragment = SelectFragment()
+    override fun startSelect() {
+        mainFragment.startSelect()
+    }
 
-    private var isSelect: Boolean = false
+    override fun stopSelect() {
+        mainFragment.stopSelect()
+    }
 
-    @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var player: MainPlayerFragment
+    override fun countSelect(count: String) {
+        mainFragment.countSelect(count)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        app.component.inject(this)
-
         checkPermission()
 
-        viewPager.adapter = PlayerViewPagerAdapter(supportFragmentManager)
-        viewPager.setPageTransformer(true, ZoomOutPageTransformer())
-        menu.setupWithViewPager(viewPager)
+        if(checkPermissionGranted()) setupFragment()
 
-        supportFragmentManager.beginTransaction().replace(R.id.player, player).commit()
-
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
-
-            override fun onPageSelected(position: Int) {
-                if(isSelect) rxBus.send(EnumSelectStatus.CANCEL)
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-        })
     }
 
-    override fun startSelect() {
-        supportFragmentManager.beginTransaction().replace(R.id.player, selectFragment).commit()
-        isSelect = true
-    }
-
-    override fun stopSelect() {
-        supportFragmentManager.beginTransaction().replace(R.id.player, player).commit()
-        isSelect = false
-    }
-
-    override fun countSelect(count: String) {
-        try {
-            selectFragment.selectCount(count)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 
     private fun checkPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
@@ -84,5 +55,26 @@ class MainActivity : AppCompatActivity(), SelectListener {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MEDIA_CONTENT_CONTROL), 1337)
             }
         }
+    }
+
+    private fun checkPermissionGranted(): Boolean {
+        if (Build.VERSION.SDK_INT >= 23) {
+            return (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(android.Manifest.permission.MEDIA_CONTENT_CONTROL) == PackageManager.PERMISSION_GRANTED)
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(checkPermissionGranted()) {
+            setupFragment()
+        }
+    }
+
+    private fun setupFragment() {
+        supportFragmentManager.beginTransaction().replace(R.id.frameLayout, mainFragment).commit()
     }
 }

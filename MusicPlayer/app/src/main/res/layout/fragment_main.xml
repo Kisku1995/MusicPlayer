@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/menu"
+        android:fontFamily="sans-serif-light"
+        app:tabMode="scrollable"
+        app:tabBackground="@drawable/tab_menu_selector"
+        app:tabTextColor="@color/colorPrimary"
+        app:tabSelectedTextColor="@color/fragment_tracks_text"
+        android:textSize="15sp"
+        app:tabIndicatorColor="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <FrameLayout
+        android:id="@+id/player"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/menu"
+        android:layout_above="@id/player"/>
+
+</RelativeLayout>

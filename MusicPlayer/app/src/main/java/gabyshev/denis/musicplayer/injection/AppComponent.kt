@@ -2,7 +2,7 @@ package gabyshev.denis.musicplayer.injection
 
 import dagger.Component
 import gabyshev.denis.musicplayer.App
-import gabyshev.denis.musicplayer.MainActivity
+import gabyshev.denis.musicplayer.main.MainActivity
 import gabyshev.denis.musicplayer.category.CategoryActivity
 import gabyshev.denis.musicplayer.fragments.albums.AlbumsFragment
 import gabyshev.denis.musicplayer.fragments.artists.ArtistsFragment
@@ -12,6 +12,7 @@ import gabyshev.denis.musicplayer.fragments.playlists.PlaylistsFragment
 import gabyshev.denis.musicplayer.fragments.select.SelectFragment
 import gabyshev.denis.musicplayer.fragments.tracks.TracksAdapter
 import gabyshev.denis.musicplayer.fragments.tracks.TracksFragment
+import gabyshev.denis.musicplayer.main.MainFragment
 import gabyshev.denis.musicplayer.player.PlayerActivity
 import gabyshev.denis.musicplayer.player.PlayerFragment
 import gabyshev.denis.musicplayer.playlists.AddPlaylistDialog
@@ -49,4 +50,5 @@ interface AppComponent {
     fun inject(playlistAdapter: PlaylistAdapter)
     fun inject(playerFragment: PlayerFragment)
     fun inject(playerActivity: PlayerActivity)
+    fun inject(mainFragment: MainFragment)
 }

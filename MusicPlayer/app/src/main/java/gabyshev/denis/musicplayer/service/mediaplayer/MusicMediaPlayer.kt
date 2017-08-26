@@ -12,7 +12,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.widget.RemoteViews
 import gabyshev.denis.musicplayer.App
-import gabyshev.denis.musicplayer.MainActivity
+import gabyshev.denis.musicplayer.main.MainActivity
 import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.fragments.player.MainPlayerFragment
 import gabyshev.denis.musicplayer.player.PlayerFragment
