@@ -13,7 +13,7 @@ import gabyshev.denis.musicplayer.R
 import gabyshev.denis.musicplayer.utils.app
 import javax.inject.Inject
 import android.view.Window.ID_ANDROID_CONTENT
-
+import gabyshev.denis.musicplayer.utils.transparentStatusBar
 
 
 /**
@@ -30,21 +30,6 @@ class PlayerActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, playerFragment).commit()
 
-        transparentStatusBar(this)
-
-
-    }
-
-    fun transparentStatusBar(activity: Activity) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            activity.window.statusBarColor = Color.TRANSPARENT
-        }
-
-        val tintManager = SystemBarTintManager(activity)
-        // enable status bar tint
-        tintManager.isStatusBarTintEnabled = true
-        // enable navigation bar tint
-        tintManager.setNavigationBarTintEnabled(true)
+        transparentStatusBar(this, true)
     }
 }

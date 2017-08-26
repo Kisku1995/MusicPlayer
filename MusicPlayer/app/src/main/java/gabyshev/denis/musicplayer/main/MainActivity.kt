@@ -1,6 +1,7 @@
 package gabyshev.denis.musicplayer.main
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
@@ -16,6 +17,7 @@ import gabyshev.denis.musicplayer.fragments.select.SelectFragment
 import gabyshev.denis.musicplayer.fragments.select.SelectListener
 import gabyshev.denis.musicplayer.utils.RxBus
 import gabyshev.denis.musicplayer.utils.app
+import gabyshev.denis.musicplayer.utils.transparentStatusBar
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -40,9 +42,6 @@ class MainActivity : AppCompatActivity(), SelectListener {
         setContentView(R.layout.activity_main)
 
         checkPermission()
-
-        if(checkPermissionGranted()) setupFragment()
-
     }
 
 
@@ -53,7 +52,11 @@ class MainActivity : AppCompatActivity(), SelectListener {
                     checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
                     checkSelfPermission(android.Manifest.permission.MEDIA_CONTENT_CONTROL) == PackageManager.PERMISSION_DENIED) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MEDIA_CONTENT_CONTROL), 1337)
+            } else {
+                setupFragment()
             }
+        } else {
+            setupFragment()
         }
     }
 
@@ -69,12 +72,20 @@ class MainActivity : AppCompatActivity(), SelectListener {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(checkPermissionGranted()) {
-            setupFragment()
-        }
+        setupFragment()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        setupFragment()
     }
 
     private fun setupFragment() {
-        supportFragmentManager.beginTransaction().replace(R.id.frameLayout, mainFragment).commit()
+        if(checkPermissionGranted())
+            supportFragmentManager.beginTransaction().replace(R.id.frameLayout, mainFragment).commitAllowingStateLoss()
+        else
+            supportFragmentManager.beginTransaction().replace(R.id.frameLayout, PermissionFragment()).commitAllowingStateLoss()
+
+
     }
 }
